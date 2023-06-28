@@ -7,8 +7,9 @@ let sectionSchema = new Schema(
         letter:     {type: String},
         capacity:   {type: Number},
         available:  {type: Boolean},
-        standing:   {type: Boolean}
+        standing:   {type: Boolean},
+        stadiumID:  {type: Number},
     }
 );
 
-module.exports = mongoose.model("section",sectionSchema);
+module.exports = mongoose.model("section", sectionSchema);
