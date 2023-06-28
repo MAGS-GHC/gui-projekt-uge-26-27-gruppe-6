@@ -12,8 +12,7 @@ const seat = require("../models/seat");
 seatrouter.post("/", (req, res) => {
   // data er den som man indtaster fra request.body
   data = req.body;
-  seat
-    .insertMany(data)
+  seat.insertMany(data)
     .then((data) => {
       res.send(data);
     })
@@ -24,8 +23,7 @@ seatrouter.post("/", (req, res) => {
 // Indlæser data på siden  localhost:4000/api/seat eller localhost:4000/api/sections
 //
 seatrouter.get("/", (req, res) => {
-  seat
-    .find()
+  seat.find()
     .then((data) => {
       res.send(data);
     })
@@ -37,8 +35,7 @@ seatrouter.get("/", (req, res) => {
 // Indlæser data ved at bruge seat.findById(req.params.id) hvor /req.params.id) er object.id i Mongodb
 // under Database --> Browse collection --> seat/section ved hjælp af
 seatrouter.get("/:id", (req, res) => {
-  seat
-    .findById(req.params.id)
+  seat.findById(req.params.id)
     .then((data) => {
       res.send(data);
     })
@@ -53,8 +50,7 @@ seatrouter.get("/:id", (req, res) => {
 seatrouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  seat
-    .findByIdAndUpdate(id, req.body)
+  seat.findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
         res
@@ -74,8 +70,7 @@ seatrouter.put("/:id", (req, res) => {
 seatrouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  seat
-    .findByIdAndDelete(id)
+  seat.findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
         res

@@ -1,21 +1,9 @@
-const router = require("express").Router();
-const product = require("../models/product");
+const seatrowrouter = require("express").Router();
+const seatrow = require("../models/seatrow");
 
-// Her kan man poste/oprette sæder med den her metode fra fx postman eller thunderclient.
-router.post("/", (req, res) => {
+seatrowrouter.post("/", (req, res) => {
   data = req.body;
-  product.insertMany(data)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
-});
-// read data /api/products
-router.get("/", (req, res) => {
-  product
-    .find()
+  seatrow.insertMany(data)
     .then((data) => {
       res.send(data);
     })
@@ -24,9 +12,8 @@ router.get("/", (req, res) => {
     });
 });
 
-// read specifik
-router.get("/:id", (req, res) => {
-  product.findById(req.params.id)
+seatrowrouter.get("/", (req, res) => {
+  seatrow.find()
     .then((data) => {
       res.send(data);
     })
@@ -35,11 +22,20 @@ router.get("/:id", (req, res) => {
     });
 });
 
-// update data with id
-router.put("/:id", (req, res) => {
+seatrowrouter.get("/:id", (req, res) => {
+  seatrow.findById(req.params.id)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+});
+
+seatrowrouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  product.findByIdAndUpdate(id, req.body)
+  seatrow.findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
         res
@@ -55,11 +51,10 @@ router.put("/:id", (req, res) => {
     });
 });
 
-// delete data
-router.delete("/:id", (req, res) => {
+seatrowrouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  product.findByIdAndDelete(id)
+  seatrow.findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
         res
@@ -74,4 +69,5 @@ router.delete("/:id", (req, res) => {
       res.status(500).send({ message: "cannot delete   " + id });
     });
 });
-module.exports = router;
+
+module.exports = seatrowrouter;
