@@ -1,3 +1,25 @@
+class Seat {
+    ASeatRow;
+    SeatNo;
+
+    constructor(seatrow, seatno) {
+        this.ASeatRow = seatrow;
+        this.SeatNo = seatno;
+    }
+}
+
+class SeatRow {
+    ASection;
+    RowNo;
+    Seats;
+
+    constructor(section, rowno, seats) {
+        this.ASection = section;
+        this.RowNo = rowno;
+        this.Seats = seats;
+    }
+}
+
 class Section {
     Name;
     Reserved;
@@ -36,6 +58,7 @@ SetUpSectionButtons();
 
 function SetUpSectionButtons() {
     for (let i = 0; i < sectionArray.length; i++) {
+        CreateSectionButtonTextElement(buttonIDArray[i]);
         SetSectionButtonText(buttonIDArray[i], sectionArray[i].Name);
         SetSectionButtonColourClass(buttonIDArray[i], sectionArray[i].Reserved, sectionArray[i].Capacity);
 
@@ -57,8 +80,12 @@ function OnMouseLeave(buttonno) {
     SetSectionButtonText(buttonIDArray[buttonno], sectionArray[buttonno].Name);
 }
 
+function CreateSectionButtonTextElement(buttonid) {
+    $("#" + buttonid).append("<h5 id='" + buttonid + "Text' class='font-weight-light'>e</h5>");
+}
+
 function SetSectionButtonText(buttonid, text) {
-    $("#" + buttonid).text(text);
+    $("#" + buttonid + "Text").text(text);
 }
 
 function SetSectionButtonColourClass(buttonid, current, capacity) {
