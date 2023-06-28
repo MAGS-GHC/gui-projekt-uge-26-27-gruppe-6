@@ -1,5 +1,5 @@
 const seatrouter = require("express").Router();
-const seats = require("../gui-projekt-uge-26-27-gruppe-6/models/seats");
+const seat = require("../gui-projekt-uge-26-27-gruppe-6/models/seat");
 
 // Her kan man poste/oprette sæder med den her metode fra fx postman eller thunderclient.
 // det gør du ved at udfyld den her i body afdelingen i postman eller thunderclient
@@ -12,7 +12,7 @@ const seats = require("../gui-projekt-uge-26-27-gruppe-6/models/seats");
 seatrouter.post("/", (req, res) => {
   // data er den som man indtaster fra request.body
   data = req.body;
-  seats
+  seat
     .insertMany(data)
     .then((data) => {
       res.send(data);
@@ -21,10 +21,10 @@ seatrouter.post("/", (req, res) => {
       res.status(500).send({ message: err.message });
     });
 });
-// Indlæser data på siden  localhost:4000/api/seats eller localhost:4000/api/sections
+// Indlæser data på siden  localhost:4000/api/seat eller localhost:4000/api/sections
 //
 seatrouter.get("/", (req, res) => {
-  seats
+  seat
     .find()
     .then((data) => {
       res.send(data);
@@ -34,10 +34,10 @@ seatrouter.get("/", (req, res) => {
     });
 });
 
-// Indlæser data ved at bruge seats.findById(req.params.id) hvor /req.params.id) er object.id i Mongodb
-// under Database --> Browse collection --> seats/section ved hjælp af
+// Indlæser data ved at bruge seat.findById(req.params.id) hvor /req.params.id) er object.id i Mongodb
+// under Database --> Browse collection --> seat/section ved hjælp af
 seatrouter.get("/:id", (req, res) => {
-  seats
+  seat
     .findById(req.params.id)
     .then((data) => {
       res.send(data);
@@ -48,12 +48,12 @@ seatrouter.get("/:id", (req, res) => {
 });
 
 //Opdatere allerede eksisterende data ved brug PUT i fx postman eller thunderclient og udflyder den samme som før men med PUT i stedet for POST
-// const id = req.params.id er indtastet til sidst i URL'en fx. localhost:4000/api/seats/fnwdigom2ie913990qgmf
-// den finder du ved at bruge get command på localhost:4000/api/seats/
+// const id = req.params.id er indtastet til sidst i URL'en fx. localhost:4000/api/seat/fnwdigom2ie913990qgmf
+// den finder du ved at bruge get command på localhost:4000/api/seat/
 seatrouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  seats
+  seat
     .findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
@@ -70,11 +70,11 @@ seatrouter.put("/:id", (req, res) => {
     });
 });
 
-// den her sletter routen eller seats ved hjælp af den førnævnte id
+// den her sletter routen eller seat ved hjælp af den førnævnte id
 seatrouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  seats
+  seat
     .findByIdAndDelete(id)
     .then((data) => {
       if (!data) {

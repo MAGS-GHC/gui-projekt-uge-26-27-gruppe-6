@@ -1,11 +1,11 @@
 const sectionrouter = require("express").Router();
-const sections = require("../gui-projekt-uge-26-27-gruppe-6/models/sections");
+const section = require("../gui-projekt-uge-26-27-gruppe-6/models/section");
 
 // post data
 sectionrouter.post("/", (req, res) => {
   data = req.body;
 
-  sections
+  section
     .insertMany(data)
     .then((data) => {
       res.send(data);
@@ -17,7 +17,7 @@ sectionrouter.post("/", (req, res) => {
 
 // read data /api/products
 sectionrouter.get("/", (req, res) => {
-  sections
+  section
     .find()
     .then((data) => {
       res.send(data);
@@ -29,7 +29,7 @@ sectionrouter.get("/", (req, res) => {
 
 // read specifik med id
 sectionrouter.get("/:id", (req, res) => {
-  sections
+  section
     .findById(req.params.id)
     .then((data) => {
       res.send(data);
@@ -43,7 +43,7 @@ sectionrouter.get("/:id", (req, res) => {
 sectionrouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  sections
+  section
     .findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
@@ -64,7 +64,7 @@ sectionrouter.put("/:id", (req, res) => {
 sectionrouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  sections
+  section
     .findByIdAndDelete(id)
     .then((data) => {
       if (!data) {

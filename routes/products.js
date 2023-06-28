@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const product = require("../gui-projekt-uge-26-27-gruppe-6/models/product");
+const product = require("../gui-projekt-uge-26-27-gruppe-6/models/products");
 
 // Her kan man poste/oprette sæder med den her metode fra fx postman eller thunderclient.
 router.post("/", (req, res) => {
