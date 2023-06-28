@@ -1,5 +1,5 @@
 const seatrouter = require("express").Router();
-const seat = require("../gui-projekt-uge-26-27-gruppe-6/models/seat");
+const seat = require("../models/seat");
 
 // Her kan man poste/oprette sæder med den her metode fra fx postman eller thunderclient.
 // det gør du ved at udfyld den her i body afdelingen i postman eller thunderclient

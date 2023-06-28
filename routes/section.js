@@ -1,10 +1,11 @@
-const stadiumrouter = require("express").Router();
-const stadium = require("../gui-projekt-uge-26-27-gruppe-6/models/stadium");
+const sectionrouter = require("express").Router();
+const section = require("../models/section");
 
 // post data
-stadiumrouter.post("/", (req, res) => {
+sectionrouter.post("/", (req, res) => {
   data = req.body;
-  stadium
+
+  section
     .insertMany(data)
     .then((data) => {
       res.send(data);
@@ -15,8 +16,8 @@ stadiumrouter.post("/", (req, res) => {
 });
 
 // read data /api/products
-stadiumrouter.get("/", (req, res) => {
-  stadium
+sectionrouter.get("/", (req, res) => {
+  section
     .find()
     .then((data) => {
       res.send(data);
@@ -27,8 +28,8 @@ stadiumrouter.get("/", (req, res) => {
 });
 
 // read specifik med id
-stadiumrouter.get("/:id", (req, res) => {
-  stadium
+sectionrouter.get("/:id", (req, res) => {
+  section
     .findById(req.params.id)
     .then((data) => {
       res.send(data);
@@ -39,10 +40,10 @@ stadiumrouter.get("/:id", (req, res) => {
 });
 
 // update data with id
-stadiumrouter.put("/:id", (req, res) => {
+sectionrouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  stadium
+  section
     .findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
@@ -55,15 +56,15 @@ stadiumrouter.put("/:id", (req, res) => {
     })
 
     .catch((err) => {
-      res.status(500).send({ message: "error updating with id " + id });
+      res.status(500).send({ message: "cannot find  " + id });
     });
 });
 
 // delete data
-stadiumrouter.delete("/:id", (req, res) => {
+sectionrouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  stadium
+  section
     .findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
@@ -79,5 +80,4 @@ stadiumrouter.delete("/:id", (req, res) => {
       res.status(500).send({ message: "cannot delete   " + id });
     });
 });
-
-module.exports = stadiumrouter;
+module.exports = sectionrouter;

@@ -9,12 +9,11 @@ app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 4000;
 
-
 // her kommer ind i routes
-// const productRoutes = require("./routes/products");
-// const seatsRoutes = require("./routes/seats");
-// const sectionsRoutes = require("./routes/sections");
-// const stadiumRoutes = require("./routes/stadium");
+const productRoutes = require("./routes/product");
+const seatRoutes = require("./routes/seat");
+const sectionRoutes = require("./routes/section");
+const stadiumRoutes = require("./routes/stadium");
 
 // kommer "message: welcome to the jungle" når man kommer ind på api/welocme
 app.get("/api/welcome",(req, res) => {    
@@ -34,10 +33,10 @@ mongoose.connection.once("open",()=> console.log('Success'))
 
 // her får vi brugt al de data vi har i de andre filer og laver api endpoints
 // for at oprette flere, spørg kasper :D :D :D :D 
-// app.use("/api/products", productRoutes);
-// app.use("/api/seats", seatsRoutes);
-// app.use("/api/sections", sectionsRoutes);
-// app.use("/api/stadium", stadiumRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/seats", seatRoutes);
+app.use("/api/sections", sectionRoutes);
+app.use("/api/stadium", stadiumRoutes);
  
 // holder altid øje med serveren 
 app.listen(PORT, function() {

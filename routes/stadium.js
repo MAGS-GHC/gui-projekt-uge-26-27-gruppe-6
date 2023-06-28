@@ -1,10 +1,10 @@
-const router = require("express").Router();
-const product = require("../gui-projekt-uge-26-27-gruppe-6/models/products");
+const stadiumrouter = require("express").Router();
+const stadium = require("../models/stadium");
 
-// Her kan man poste/oprette sæder med den her metode fra fx postman eller thunderclient.
-router.post("/", (req, res) => {
+// post data
+stadiumrouter.post("/", (req, res) => {
   data = req.body;
-  product
+  stadium
     .insertMany(data)
     .then((data) => {
       res.send(data);
@@ -13,9 +13,10 @@ router.post("/", (req, res) => {
       res.status(500).send({ message: err.message });
     });
 });
+
 // read data /api/products
-router.get("/", (req, res) => {
-  product
+stadiumrouter.get("/", (req, res) => {
+  stadium
     .find()
     .then((data) => {
       res.send(data);
@@ -25,9 +26,9 @@ router.get("/", (req, res) => {
     });
 });
 
-// read specifik
-router.get("/:id", (req, res) => {
-  product
+// read specifik med id
+stadiumrouter.get("/:id", (req, res) => {
+  stadium
     .findById(req.params.id)
     .then((data) => {
       res.send(data);
@@ -38,10 +39,10 @@ router.get("/:id", (req, res) => {
 });
 
 // update data with id
-router.put("/:id", (req, res) => {
+stadiumrouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  product
+  stadium
     .findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
@@ -59,10 +60,10 @@ router.put("/:id", (req, res) => {
 });
 
 // delete data
-router.delete("/:id", (req, res) => {
+stadiumrouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  product
+  stadium
     .findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
@@ -78,4 +79,5 @@ router.delete("/:id", (req, res) => {
       res.status(500).send({ message: "cannot delete   " + id });
     });
 });
-module.exports = router;
+
+module.exports = stadiumrouter;

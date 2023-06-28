@@ -1,11 +1,10 @@
-const sectionrouter = require("express").Router();
-const section = require("../gui-projekt-uge-26-27-gruppe-6/models/section");
+const router = require("express").Router();
+const product = require("../models/product");
 
-// post data
-sectionrouter.post("/", (req, res) => {
+// Her kan man poste/oprette sæder med den her metode fra fx postman eller thunderclient.
+router.post("/", (req, res) => {
   data = req.body;
-
-  section
+  product
     .insertMany(data)
     .then((data) => {
       res.send(data);
@@ -14,10 +13,9 @@ sectionrouter.post("/", (req, res) => {
       res.status(500).send({ message: err.message });
     });
 });
-
 // read data /api/products
-sectionrouter.get("/", (req, res) => {
-  section
+router.get("/", (req, res) => {
+  product
     .find()
     .then((data) => {
       res.send(data);
@@ -27,9 +25,9 @@ sectionrouter.get("/", (req, res) => {
     });
 });
 
-// read specifik med id
-sectionrouter.get("/:id", (req, res) => {
-  section
+// read specifik
+router.get("/:id", (req, res) => {
+  product
     .findById(req.params.id)
     .then((data) => {
       res.send(data);
@@ -40,10 +38,10 @@ sectionrouter.get("/:id", (req, res) => {
 });
 
 // update data with id
-sectionrouter.put("/:id", (req, res) => {
+router.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  section
+  product
     .findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
@@ -56,15 +54,15 @@ sectionrouter.put("/:id", (req, res) => {
     })
 
     .catch((err) => {
-      res.status(500).send({ message: "cannot find  " + id });
+      res.status(500).send({ message: "error updating with id " + id });
     });
 });
 
 // delete data
-sectionrouter.delete("/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  section
+  product
     .findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
@@ -80,4 +78,4 @@ sectionrouter.delete("/:id", (req, res) => {
       res.status(500).send({ message: "cannot delete   " + id });
     });
 });
-module.exports = sectionrouter;
+module.exports = router;
