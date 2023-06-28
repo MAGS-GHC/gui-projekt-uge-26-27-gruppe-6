@@ -35,4 +35,5 @@
 .container-content-img:hover{
     cursor: pointer;
     background-color: green;
+    fill: red;
 }
