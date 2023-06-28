@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 4000;
 // her kommer ind i routes
 const productRoutes = require("./routes/product");
 const seatRoutes = require("./routes/seat");
+const seatrowRoutes = require("./routes/seatrow");
 const sectionRoutes = require("./routes/section");
 const stadiumRoutes = require("./routes/stadium");
 
@@ -35,11 +36,12 @@ mongoose.connection.once("open",()=> console.log('Success'))
 // for at oprette flere, spørg kasper :D :D :D :D 
 app.use("/api/products", productRoutes);
 app.use("/api/seats", seatRoutes);
+app.use("/api/seatrows", seatrowRoutes);
 app.use("/api/sections", sectionRoutes);
 app.use("/api/stadium", stadiumRoutes);
  
 // holder altid øje med serveren 
 app.listen(PORT, function() {
-    console.log("server is running "+ PORT)
+    console.log("server is running " + PORT)
 })
 module.exports = app;       

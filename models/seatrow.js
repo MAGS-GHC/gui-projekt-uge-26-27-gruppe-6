@@ -9,4 +9,4 @@ let seatrowSchema = new Schema(
     }
 );
 
-module.exports = mongoose.model("seatrow",seatrowSchema);
+module.exports = mongoose.model("seatrow", seatrowSchema);
