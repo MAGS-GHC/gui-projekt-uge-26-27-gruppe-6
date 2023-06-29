@@ -1,4 +1,3 @@
-
 // ---------------------------------- Klasser? ----------------------------------
 
 class Seat {
@@ -173,7 +172,7 @@ function BuildSeatTable(section) {
 
     for (let row = 0; row < sectionArray[section].Rows.length; row++) { 
         tableContent += "<tr><th scope'row'>" + (row + 1) + "</th>";
-
+        
         for (let seat = 0; seat < sectionArray[section].Rows[row].Seats.length; seat++) { //totalRowSeats
             tableContent += "<td>" + sectionArray[section].Rows[row].Seats[seat].SeatNo + "</td>"
             
@@ -181,8 +180,8 @@ function BuildSeatTable(section) {
         tableContent += "</tr>";
     }
 
-    $("#bookingMenuTableHead").html("<tr><th colspan='" + (sectionArray[section].Rows[0].Seats.length + 1) +"' scope='col'>Række</th></tr>");
-    $("#bookingMenuTableBody").html(tableContent);
+    $("#bookingMenuTableHead").append("<tr><th colspan='" + (sectionArray[section].Rows[0].Seats.length + 1) +"' scope='col'>Række</th></tr>");
+    $("#bookingMenuTableBody").append(tableContent);
 }
 
 

@@ -19,7 +19,7 @@ const productRoutes = require("./routes/product");
 const seatRoutes = require("./routes/seat");
 const seatrowRoutes = require("./routes/seatrow");
 const sectionRoutes = require("./routes/section");
-const stadiumRoutes = require("./routes/stadium");
+const venueRoutes = require("./routes/venue");
 
 // kommer "message: welcome to the jungle" når man kommer ind på api/welocme
 app.get("/api/welcome",(req, res) => {    
@@ -43,7 +43,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/seats", seatRoutes);
 app.use("/api/seatrows", seatrowRoutes);
 app.use("/api/sections", sectionRoutes);
-app.use("/api/stadium", stadiumRoutes);
+app.use("/api/venue", venueRoutes);
  
 // holder altid øje med serveren 
 app.listen(PORT, function() {
