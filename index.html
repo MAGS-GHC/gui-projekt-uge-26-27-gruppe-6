@@ -12,18 +12,45 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <body>
-    <!--
-    <div class="container-sm">100% wide until small breakpoint</div>
-    <div class="container-md">100% wide until medium breakpoint</div>
-    <div class="container-lg">100% wide until large breakpoint</div>
-    <div class="container-xl">100% wide until extra large breakpoint</div>
 
-    3x3 gitter, hvor der primært bruges en + form af det. Deles op i top, midte og bund.
+    <!---------------------------------- Nav ---------------------------------->
 
-    REMINDER -------------- Forside med valgmuligheder for sted? Det er ikke meningen, at man KUN skal kunne bruge dette til vores stadion
-    -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <span class="navbar-brand" href="#">Navbar</span>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
 
-    <div id="bookingMap" class="container-lg h-100 mt-5">
+    <!---------------------------------- Valg af sektion ---------------------------------->
+
+    <div id="bookingMap" class="container-lg h-100 mt-4">
         <div class="row justify-content-center topbottomrow pb-4">
             <div class="col-3"></div>
             <div class="col-6">
@@ -98,6 +125,32 @@
             </div>
             <div class="col-3"></div>
         </div>
+    </div>
+
+    <!---------------------------------- Sædebooking ---------------------------------->
+
+    <div id="bookingMenu" class="container-lg h-100 mt-5">
+        <button type="button" class="btn btn-outline-info btn-lg" id="returnBtn">
+            <span>Tilbage</span>
+        </button>
+
+        <div>
+            <h4 id="bookingMenuSectionName" class="text-center"></h4>
+            <table class="table">
+                <thead id="bookingMenuTableHead" class="thead-dark text-left"></thead>
+                <tbody id="bookingMenuTableBody">
+                    <!--
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>
+                            <a class="nav-link" href="#">Link</a>
+                        </td>
+                    </tr>
+                    -->
+                </tbody>
+            </table>
+        </div>
+        
     </div>
 </body>
 </html>

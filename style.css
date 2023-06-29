@@ -24,8 +24,14 @@ button:disabled {
     height: 20%;
 }
 
-/*
-.button {
-    height: 100%;
-    width: 100%;
+hr.dashed {
+    border-top: 2px dashed #999;
+}
+
+hr.dotted {
+    border-top: 2px dotted #999;
+}
+
+hr.solid {
+    border-top: 2px solid #999;
 }

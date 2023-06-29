@@ -1,20 +1,18 @@
+// ---------------------------------- Klasser? ----------------------------------
+
 class Seat {
-    ASeatRow;
     SeatNo;
 
-    constructor(seatrow, seatno) {
-        this.ASeatRow = seatrow;
+    constructor(seatno) {
         this.SeatNo = seatno;
     }
 }
 
 class SeatRow {
-    ASection;
     RowNo;
     Seats;
 
-    constructor(section, rowno, seats) {
-        this.ASection = section;
+    constructor(rowno, seats) {
         this.RowNo = rowno;
         this.Seats = seats;
     }
@@ -34,8 +32,27 @@ class Section {
     }
 }
 
+const secGRow1Seats = [];
+for (let i = 0; i < 20; i++){
+    let testSeat = new Seat(i+1);
+    secGRow1Seats.push(testSeat);
+   
+}
+
+const secGRow2Seats = [];
+for (let i = 0; i < 8; i++){
+    let testSeat = new Seat(i+21);
+    secGRow2Seats.push(testSeat);
+}
+
+const secGRows = [];
+let row1 = new SeatRow(1, secGRow1Seats);
+secGRows.push(row1);
+let row2 = new SeatRow(2, secGRow2Seats);
+secGRows.push(row2);
+
 const sectionArray = [];
-let secG = new Section("G", 160, 280, 18);
+let secG = new Section("G", 160, 280, secGRows);
 sectionArray.push(secG);
 let secHN = new Section("H - Nedre", 40, 150, 6);
 sectionArray.push(secHN);
@@ -54,6 +71,10 @@ sectionArray.push(secM);
 
 const buttonIDArray = ["sectionG", "sectionHN", "sectionIN", "sectionJN", "sectionK", "sectionL", "sectionMF", "sectionM"];
 
+
+// ---------------------------------- Opsætning ----------------------------------
+
+$("#bookingMenu").hide();
 SetUpSectionButtons();
 
 function SetUpSectionButtons() {
@@ -63,22 +84,43 @@ function SetUpSectionButtons() {
         SetSectionButtonColourClass(buttonIDArray[i], sectionArray[i].Reserved, sectionArray[i].Capacity);
 
         $("#" + buttonIDArray[i]).on("mouseenter", function() {
-            OnMouseEnter(i);
+            SectionButtonOnMouseEnter(i);
         });
         $("#" + buttonIDArray[i]).on("mouseleave", function() {
-            OnMouseLeave(i);
+            SectionButtonOnMouseLeave(i);
+        });
+        $("#" + buttonIDArray[i]).on("click", function() {
+            SectionButtonOnClick(i);
         });
     }
+    $("#returnBtn").on("click", function() {
+        ReturnButtonOnClick();
+    });
 }
 
-function OnMouseEnter(buttonno) {
+
+// ---------------------------------- Knap Funktionalitet ----------------------------------
+
+function SectionButtonOnMouseEnter(buttonno) {
     let numberString = sectionArray[buttonno].Reserved + " / " + sectionArray[buttonno].Capacity;
     SetSectionButtonText(buttonIDArray[buttonno], numberString);
 }
 
-function OnMouseLeave(buttonno) {
+function SectionButtonOnMouseLeave(buttonno) {
     SetSectionButtonText(buttonIDArray[buttonno], sectionArray[buttonno].Name);
 }
+
+function SectionButtonOnClick(buttonno) {
+    ToggleView(0);
+    SetUpBookingMenu(buttonno);
+}
+
+function ReturnButtonOnClick() {
+    ToggleView(1);
+}
+
+
+// ---------------------------------- Knap Funktionalitet #2 ----------------------------------
 
 function CreateSectionButtonTextElement(buttonid) {
     $("#" + buttonid).append("<h5 id='" + buttonid + "Text' class='font-weight-light'>e</h5>");
@@ -103,3 +145,44 @@ function SetSectionButtonColourClass(buttonid, current, capacity) {
 
     $("#" + buttonid).addClass(classString);
 }
+
+function ToggleView(state) {
+    if (state === 0) {
+        $("#bookingMap").fadeOut("fast", function() {
+            $("#bookingMenu").fadeIn("fast");
+        });
+    }
+    else {
+        $("#bookingMenu").fadeOut("fast", function() {
+            $("#bookingMap").fadeIn("fast");
+        });
+    }
+}
+
+
+// ---------------------------------- Sædebooking ----------------------------------
+
+function SetUpBookingMenu(section) {
+    $("#bookingMenuSectionName").text("Sektion " + sectionArray[section].Name);
+    BuildSeatTable(section);
+}
+
+function BuildSeatTable(section) {
+    let tableContent;
+
+    for (let row = 0; row < sectionArray[section].Rows.length; row++) { 
+        tableContent += "<tr><th scope'row'>" + (row + 1) + "</th>";
+
+        for (let seat = 0; seat < sectionArray[section].Rows[row].Seats.length; seat++) { //totalRowSeats
+            tableContent += "<td>" + sectionArray[section].Rows[row].Seats[seat].SeatNo + "</td>"
+            
+        }
+        tableContent += "</tr>";
+    }
+
+    $("#bookingMenuTableHead").html("<tr><th colspan='" + (sectionArray[section].Rows[0].Seats.length + 1) +"' scope='col'>Række</th></tr>");
+    $("#bookingMenuTableBody").html(tableContent);
+}
+
+
+
