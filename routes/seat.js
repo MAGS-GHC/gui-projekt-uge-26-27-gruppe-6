@@ -20,6 +20,7 @@ seatrouter.post("/", (req, res) => {
       res.status(500).send({ message: err.message });
     });
 });
+
 // Indlæser data på siden  localhost:4000/api/seat eller localhost:4000/api/sections
 //
 seatrouter.get("/", (req, res) => {

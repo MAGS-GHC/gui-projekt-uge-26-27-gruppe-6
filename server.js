@@ -5,6 +5,11 @@ const bodyParser = require("body-parser");
 const app = express();
 require("dotenv-flow").config();
 
+const cors = require('cors');
+app.use(cors({
+    origin: 'http://127.0.0.1:5500'
+}));
+
 app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 4000;
