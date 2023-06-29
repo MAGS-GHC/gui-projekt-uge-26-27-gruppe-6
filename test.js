@@ -95,7 +95,7 @@ function GenerateSeats() {
 				seatsLeftOver--;
 			}
 
-            console.log(`Sæder per række: ${seatsPerRow}   Sæder til overs: ${seatsLeftOver}`);
+            console.log(`Sæder per række: ${totalRowSeats}   Sæder til overs: ${seatsLeftOver}`);
 		}
 
         console.log(counter + " / " + sectionCapacity[section]);
