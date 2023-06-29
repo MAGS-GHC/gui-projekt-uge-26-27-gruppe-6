@@ -1,28 +1,31 @@
 
-function createSeats(){
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+
+
+// function createSeats(){
+//     var myHeaders = new Headers();
+//     myHeaders.append("Content-Type", "application/json");
     
-    var raw = JSON.stringify({
-      "id": "19210",
-      "seatrowID": "1",
-      "reserved": "false",
-      "booked": "false",
-      "seatnumber": "1"
-    });
+//     var raw = JSON.stringify({
+//       "id": "0000",
+//       "seatrowID": "1",
+//       "reserved": "false",
+//       "booked": "false",
+//       "seatnumber": "1"
+//     });
     
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-    };
+//     var requestOptions = {
+//       method: 'POST',
+//       headers: myHeaders,
+//       body: raw,
+//       redirect: 'follow'
+//     };
     
-    fetch("http://localhost:4000/api/seats/", requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
-      .catch(error => console.log('error', error));
-}
+//     fetch("http://localhost:4000/api/seats/", requestOptions)
+//       .then(response => response.text())
+//       .then(result => console.log(result))
+//       .catch(error => console.log('error', error));
+// }
+// createSeats();
 
 class Section {
     ID;
@@ -61,9 +64,12 @@ let secM = new Section(7, "M", 600, true, false, 0);
 sectionArray.push(secM);
 
 
-sectionArray.forEach(section => {
-	createSection(section)
-});
+function GenerateSections() {
+    sectionArray.forEach(section => {
+        createSection(section)
+    });
+}
+//GenerateSections();
 
 function createSection(section){
     var myHeaders = new Headers();
