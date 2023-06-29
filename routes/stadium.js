@@ -4,8 +4,7 @@ const stadium = require("../models/stadium");
 // post data
 stadiumrouter.post("/", (req, res) => {
   data = req.body;
-  stadium
-    .insertMany(data)
+  stadium.insertMany(data)
     .then((data) => {
       res.send(data);
     })
@@ -16,8 +15,7 @@ stadiumrouter.post("/", (req, res) => {
 
 // read data /api/products
 stadiumrouter.get("/", (req, res) => {
-  stadium
-    .find()
+  stadium.find()
     .then((data) => {
       res.send(data);
     })
@@ -28,8 +26,7 @@ stadiumrouter.get("/", (req, res) => {
 
 // read specifik med id
 stadiumrouter.get("/:id", (req, res) => {
-  stadium
-    .findById(req.params.id)
+  stadium.findById(req.params.id)
     .then((data) => {
       res.send(data);
     })
@@ -42,8 +39,7 @@ stadiumrouter.get("/:id", (req, res) => {
 stadiumrouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  stadium
-    .findByIdAndUpdate(id, req.body)
+  stadium.findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
         res
@@ -63,8 +59,7 @@ stadiumrouter.put("/:id", (req, res) => {
 stadiumrouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  stadium
-    .findByIdAndDelete(id)
+  stadium.findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
         res

@@ -9,4 +9,4 @@ let stadiumSchema = new Schema(
     }
 );
 
-module.exports = mongoose.model("stadium",stadiumSchema);
+module.exports = mongoose.model("stadium", stadiumSchema);
