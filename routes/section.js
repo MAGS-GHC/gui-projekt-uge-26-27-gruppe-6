@@ -5,8 +5,7 @@ const section = require("../models/section");
 sectionrouter.post("/", (req, res) => {
   data = req.body;
 
-  section
-    .insertMany(data)
+  section.insertMany(data)
     .then((data) => {
       res.send(data);
     })
@@ -17,8 +16,7 @@ sectionrouter.post("/", (req, res) => {
 
 // read data /api/products
 sectionrouter.get("/", (req, res) => {
-  section
-    .find()
+  section.find()
     .then((data) => {
       res.send(data);
     })
@@ -29,8 +27,7 @@ sectionrouter.get("/", (req, res) => {
 
 // read specifik med id
 sectionrouter.get("/:id", (req, res) => {
-  section
-    .findById(req.params.id)
+  section.findById(req.params.id)
     .then((data) => {
       res.send(data);
     })
@@ -43,8 +40,7 @@ sectionrouter.get("/:id", (req, res) => {
 sectionrouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  section
-    .findByIdAndUpdate(id, req.body)
+  section.findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
         res
@@ -64,8 +60,7 @@ sectionrouter.put("/:id", (req, res) => {
 sectionrouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  section
-    .findByIdAndDelete(id)
+  section.findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
         res
