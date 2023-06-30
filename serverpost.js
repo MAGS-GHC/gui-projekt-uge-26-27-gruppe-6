@@ -156,7 +156,7 @@ function GenerateSeats() {
 		for (let row = 0; row < sectionRowNoArray[section]; row++) {
 			let totalRowSeats;
 
-			if (seatsLeftOver > 0) {
+			if (seatsLeftOver > 0) { //Algoritme virker, så længe rest > antal rækker
 				totalRowSeats = seatsPerRow + 1;
 			}
 			else {
