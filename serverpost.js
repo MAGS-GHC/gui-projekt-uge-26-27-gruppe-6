@@ -48,6 +48,17 @@ class Seat {
     }
 }
 
+class Venue {
+	ID;
+	Town;
+	Capacity;
+
+	constructor(id, town, capacity) {
+        this.ID = id;
+        this.Town = town;
+		this.Capacity = capacity;
+    }
+}
 
 function GenerateSections() {
 	let sectionArray = [];
@@ -100,8 +111,6 @@ function createSection(section){
       .catch(error => console.log('error', error));
 }
     
-
-
 function GenerateSeatRows() {
 	let seatRowIDCounter = 0;
 	let seatRowArray = [];
@@ -113,7 +122,6 @@ function GenerateSeatRows() {
 			seatRowIDCounter++;
 		}
 	}
-	
     seatRowArray.forEach(seatRow => {
         createSeatRow(seatRow);
     });
@@ -137,13 +145,11 @@ function createSeatRow(seatRow){
       redirect: 'follow'
     };
     
-    fetch("http://localhost:4000/api/sections/", requestOptions)
+    fetch("http://localhost:4000/api/seatrows/", requestOptions)
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));
 }
-
-
 
 function GenerateSeats() {
 	let seatIDCounter = 0;
@@ -174,7 +180,7 @@ function GenerateSeats() {
 			}
 		}
 	}
-
+  //createSeat(seatArray)
 	seatArray.forEach(seat => {
         createSeat(seat);
     });
@@ -207,4 +213,37 @@ function createSeat(seat){
       .catch(error => console.log('error', error));
 }
 
-//createSeats();
+
+function createVenue(venue){
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  
+  var raw = JSON.stringify({
+    "id": venue.ID,
+    "town": venue.Town,
+    "capacity": venue.Capacity,
+  });
+  
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+  
+  fetch("http://localhost:4000/api/venue/", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+}
+
+function GenerateVenue() {
+	let venueArray = [];
+	let venueViborg = new Venue(1, "Viborg", 2460);
+	venueArray.push(venueViborg);
+
+    venueArray.forEach(venue => {
+        createVenue(venue);
+    });
+}
+//GenerateVenue();

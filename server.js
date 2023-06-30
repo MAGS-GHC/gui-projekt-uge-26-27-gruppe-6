@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 4000;
 
 // her kommer ind i routes
-const productRoutes = require("./routes/product");
 const seatRoutes = require("./routes/seat");
 const seatrowRoutes = require("./routes/seatrow");
 const sectionRoutes = require("./routes/section");
@@ -39,7 +38,6 @@ mongoose.connection.once("open",()=> console.log('Success'))
 
 // her får vi brugt al de data vi har i de andre filer og laver api endpoints
 // for at oprette flere, spørg kasper :D :D :D :D 
-app.use("/api/products", productRoutes);
 app.use("/api/seats", seatRoutes);
 app.use("/api/seatrows", seatrowRoutes);
 app.use("/api/sections", sectionRoutes);
