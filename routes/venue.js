@@ -1,10 +1,10 @@
-const stadiumrouter = require("express").Router();
-const stadium = require("../models/stadium");
+const venuerouter = require("express").Router();
+const venue = require("../models/venue");
 
 // post data
-stadiumrouter.post("/", (req, res) => {
+venuerouter.post("/", (req, res) => {
   data = req.body;
-  stadium.insertMany(data)
+  venue.insertMany(data)
     .then((data) => {
       res.send(data);
     })
@@ -14,8 +14,8 @@ stadiumrouter.post("/", (req, res) => {
 });
 
 // read data /api/products
-stadiumrouter.get("/", (req, res) => {
-  stadium.find()
+venuerouter.get("/", (req, res) => {
+  venue.find()
     .then((data) => {
       res.send(data);
     })
@@ -25,8 +25,8 @@ stadiumrouter.get("/", (req, res) => {
 });
 
 // read specifik med id
-stadiumrouter.get("/:id", (req, res) => {
-  stadium.findById(req.params.id)
+venuerouter.get("/:id", (req, res) => {
+  venue.findById(req.params.id)
     .then((data) => {
       res.send(data);
     })
@@ -36,10 +36,10 @@ stadiumrouter.get("/:id", (req, res) => {
 });
 
 // update data with id
-stadiumrouter.put("/:id", (req, res) => {
+venuerouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  stadium.findByIdAndUpdate(id, req.body)
+  venue.findByIdAndUpdate(id, req.body)
     .then((data) => {
       if (!data) {
         res
@@ -56,10 +56,10 @@ stadiumrouter.put("/:id", (req, res) => {
 });
 
 // delete data
-stadiumrouter.delete("/:id", (req, res) => {
+venuerouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  stadium.findByIdAndDelete(id)
+  venue.findByIdAndDelete(id)
     .then((data) => {
       if (!data) {
         res
@@ -75,4 +75,4 @@ stadiumrouter.delete("/:id", (req, res) => {
     });
 });
 
-module.exports = stadiumrouter;
+module.exports = venuerouter;

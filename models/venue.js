@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-let stadiumSchema = new Schema(
+let venueSchema = new Schema(
     {
         id:         {type: Number}, 
         town:     {type: String},
@@ -9,4 +9,4 @@ let stadiumSchema = new Schema(
     }
 );
 
-module.exports = mongoose.model("stadium", stadiumSchema);
+module.exports = mongoose.model("venue", venueSchema);
