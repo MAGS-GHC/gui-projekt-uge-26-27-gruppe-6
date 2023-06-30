@@ -137,7 +137,7 @@ function createSeatRow(seatRow){
       redirect: 'follow'
     };
     
-    fetch("http://localhost:4000/api/sections/", requestOptions)
+    fetch("http://localhost:4000/api/seatrows/", requestOptions)
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));

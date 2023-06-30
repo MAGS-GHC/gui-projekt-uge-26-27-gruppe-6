@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div class="col-6 mh-100">
-                <img src="/assets/fodbold.png" class="img-fluid mh-100">
+                <img src="/images/fodbold.png" class="img-fluid mh-100">
             </div>
             <div class="col-3 mh-100">
                 <div class="row sidecol">
@@ -129,28 +129,56 @@
 
     <!---------------------------------- Sædebooking ---------------------------------->
 
-    <div id="bookingMenu" class="container-lg h-100 mt-5">
+    <div id="bookingMenu" class="container-md h-100 mt-5">
         <button type="button" class="btn btn-outline-info btn-lg" id="returnBtn">
             <span>Tilbage</span>
         </button>
 
+        <div id="seatModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="seatModalBody" class="modal-body">
+                        <p>Modal body text goes here.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div>
             <h4 id="bookingMenuSectionName" class="text-center"></h4>
-            <table class="table">
-                <thead id="bookingMenuTableHead" class="thead-dark text-left"></thead>
-                <tbody id="bookingMenuTableBody">
-                    <!--
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>
-                            <a class="nav-link" href="#">Link</a>
-                        </td>
-                    </tr>
-                    -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="bookingMenuTable" class="table">
+                    <thead id="bookingMenuTableHead" class="thead-dark">
+                        <tr>
+                            <th scope='col' class="text-left rowh">Række</th>
+                            <th scope='col' colspan="100"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingMenuTableBody"></tbody>
+                </table>
+                <table class="table">
+                    <thead id="bookingMenuTableHead2">
+                        <tr>
+                            <th scope='col' class="text-left rowh">Række</th>
+                            <th scope='col' colspan="100"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingMenuTableBody2">
+
+                    </tbody>
+                </table>
+            </div>       
         </div>
-        
     </div>
 </body>
 </html>

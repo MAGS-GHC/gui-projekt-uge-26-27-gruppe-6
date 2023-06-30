@@ -1,10 +1,16 @@
 // ---------------------------------- Klasser? ----------------------------------
 
 class Seat {
+    SeatID;
     SeatNo;
+    Reserved;
+    Booked;
 
-    constructor(seatno) {
+    constructor(seatid, seatno, reserved, booked) {
+        this.SeatID = seatid;
         this.SeatNo = seatno;
+        this.Reserved = reserved;
+        this.Booked = booked;
     }
 }
 
@@ -22,54 +28,89 @@ class Section {
     Name;
     Reserved;
     Capacity;
+    Available;
     Rows;
 
-    constructor(name, reserved, capacity, rows) {
+    constructor(name, reserved, capacity, available, rows) {
         this.Name = name;
         this.Reserved = reserved;
         this.Capacity = capacity;
+        this.Available = available;
         this.Rows = rows;
     }
 }
 
-const secGRow1Seats = [];
-for (let i = 0; i < 20; i++){
-    let testSeat = new Seat(i+1);
-    secGRow1Seats.push(testSeat);
-   
-}
 
-const secGRow2Seats = [];
-for (let i = 0; i < 8; i++){
-    let testSeat = new Seat(i+21);
-    secGRow2Seats.push(testSeat);
-}
+// ---------------------------------- TEST METODER ----------------------------------
 
-const secGRows = [];
-let row1 = new SeatRow(1, secGRow1Seats);
-secGRows.push(row1);
-let row2 = new SeatRow(2, secGRow2Seats);
-secGRows.push(row2);
+const seatFreePath = "/images/seat_free.png";
+const seatReservedPath = "/images/seat_reserved.png";
+const seatBookedPath = "/images/seat_booked.png";
 
 const sectionArray = [];
-let secG = new Section("G", 160, 280, secGRows);
-sectionArray.push(secG);
-let secHN = new Section("H - Nedre", 40, 150, 6);
-sectionArray.push(secHN);
-let secIN = new Section("I - Nedre", 140, 150, 6);
-sectionArray.push(secIN);
-let secJN = new Section("J - Nedre", 35, 150, 6);
-sectionArray.push(secJN);
-let secK = new Section("K", 230, 230, 18);
-sectionArray.push(secK);
-let secL = new Section("L", 50, 600, 18);
-sectionArray.push(secL);
-let secMF = new Section("M - Fan", 230, 300, 18);
-sectionArray.push(secMF);
-let secM = new Section("M", 350, 600, 18);
-sectionArray.push(secM);
-
+const sectionCapacity = [280, 150, 150, 150, 230, 600, 300, 600];
+const sectionRowNoArray = [18, 6, 6, 6, 18, 18, 18, 18];
+const sectionNameArray = ["G", "H - Nedre", "I - Nedre", "J - Nedre", "K", "L", "M", "M - Fan"];
 const buttonIDArray = ["sectionG", "sectionHN", "sectionIN", "sectionJN", "sectionK", "sectionL", "sectionMF", "sectionM"];
+
+
+function GenerateTestSeats() { //Danner testsæder og sæderækker til sektion G
+	let seatIDCounter = 0;
+
+    for (let section = 0; section < sectionCapacity.length; section++) {
+        let seatsPerRow = Math.floor(sectionCapacity[section] / sectionRowNoArray[section]);
+        let seatsLeftOver = sectionCapacity[section] % sectionRowNoArray[section];
+        let secRows = [];
+        let seatNumberCounter = 1;
+        let bookedSeatsCounter = 0;
+
+        let bookingRange = Math.floor(Math.random() * 13);
+        
+        console.log("Sektion: " + sectionNameArray[section] + ", bookingRange: " + bookingRange);
+        
+
+        for (let row = 0; row < sectionRowNoArray[section]; row++) {
+            let seatRowArray = [];
+            let totalRowSeats;
+            
+            if (seatsLeftOver > 0) {
+                totalRowSeats = seatsPerRow + 1;
+            }
+            else {
+                totalRowSeats = seatsPerRow;
+            }
+
+            for (let seat = 0; seat < totalRowSeats; seat++) {
+                let booked = false;
+                
+                let bookingChance = Math.floor(Math.random() * 13);
+                if ((12 - bookingRange) <= bookingChance) { //tilfældig rate af booking per sektion
+                    booked = true;
+                    bookedSeatsCounter++;
+                }
+
+                let newSeat = new Seat(seatIDCounter, seatNumberCounter, false, booked);
+                seatRowArray.push(newSeat);
+                seatNumberCounter++;
+                seatIDCounter++;
+            }
+
+            if (seatsLeftOver > 0) {
+                seatsLeftOver--;
+            }
+
+            let newSeatRow = new SeatRow(row, seatRowArray);
+            secRows.push(newSeatRow);
+        }
+
+        let newSection = new Section(sectionNameArray[section], bookedSeatsCounter, sectionCapacity[section], true, secRows);
+        sectionArray.push(newSection);
+    }
+}
+
+GenerateTestSeats();
+
+
 
 
 // ---------------------------------- Opsætning ----------------------------------
@@ -138,7 +179,7 @@ function SetSectionButtonColourClass(buttonid, current, capacity) {
         classString = "btn-dark";
     else if (percentage > 0.9)
         classString = "btn-danger";
-    else if (percentage > 0.6)
+    else if (percentage > 0.7)
         classString = "btn-warning";
     else
         classString = "btn-success";
@@ -168,21 +209,82 @@ function SetUpBookingMenu(section) {
 }
 
 function BuildSeatTable(section) {
-    let tableContent;
+    let tableContent = ["", ""];
+    let firstRowLength = sectionArray[section].Rows[0].Seats.length;
+    let activeTable = 0;
 
     for (let row = 0; row < sectionArray[section].Rows.length; row++) { 
-        tableContent += "<tr><th scope'row'>" + (row + 1) + "</th>";
-        
-        for (let seat = 0; seat < sectionArray[section].Rows[row].Seats.length; seat++) { //totalRowSeats
-            tableContent += "<td>" + sectionArray[section].Rows[row].Seats[seat].SeatNo + "</td>"
-            
+        if (sectionArray[section].Rows[row].Seats.length != firstRowLength) {
+            activeTable = 1;
         }
-        tableContent += "</tr>";
+
+        tableContent[activeTable] += "<tr><th scope='row' class='rowborder align-middle text-center'>" + (row + 1) + "</th>";
+
+        for (let seat = 0; seat < sectionArray[section].Rows[row].Seats.length; seat++) { //totalRowSeats
+            let currentSeat = sectionArray[section].Rows[row].Seats[seat];
+            let seatPath;
+            let clickable;
+
+            if (currentSeat.Booked) {
+                seatPath = seatBookedPath;
+                clickable = false;
+            }
+            else if (currentSeat.Reserved) {
+                seatPath = seatReservedPath;
+                clickable = false;
+            }
+            else {
+                seatPath = seatFreePath;
+                clickable = true;
+            }
+
+            if (clickable) {
+                tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' class='align-middle text-center'>" +
+                "<img src='" + seatPath + "' class='img-fluid clickable'></td>"; //style='height: 32px; width: 32px;' class='img-fluid'   
+            }
+            else {
+                tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' class='align-middle text-center'>" +
+                "<img src='" + seatPath + "' class='img-fluid'></td>"; 
+            }
+        }
+        tableContent[activeTable] += "</tr>";
     }
 
-    $("#bookingMenuTableHead").append("<tr><th colspan='" + (sectionArray[section].Rows[0].Seats.length + 1) +"' scope='col'>Række</th></tr>");
-    $("#bookingMenuTableBody").append(tableContent);
+    $("#bookingMenuTableBody").html(tableContent[0]);
+    $("#bookingMenuTableBody2").html(tableContent[1]);
+
+    AttachSeatClickEvent();
 }
 
+function AttachSeatClickEvent() {
+    $(".clickable").each(function() {
+        $(this).on("click", function() {
+            Jesus(($(this).parent().attr("id")).slice(4));
+        });
+    });
+}
 
+function Jesus(seatid) {
+    alert(seatid);
+    /*
+    $("seatModalBodyText").text(seatid);
+    $("seatModal").modal('toggle');
+    */
+    
+}
 
+function ActiveSeatImagePath(seat) {
+    let seatPath;
+
+    if (seat.Booked) {
+        seatPath = seatBookedPath;
+    }
+    else if (seat.Reserved) {
+        seatPath = seatReservedPath;
+    }
+    else {
+        seatPath = seatFreePath;
+    }
+    
+    return seatPath;
+}

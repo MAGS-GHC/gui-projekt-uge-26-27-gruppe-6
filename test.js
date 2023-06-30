@@ -40,7 +40,7 @@ function TotalCapacity() {
     console.log(cap);
 }
 
-TotalCapacity();
+//TotalCapacity();
 
 
 function GenerateSeatRows() {
@@ -103,4 +103,4 @@ function GenerateSeats() {
 	}
 }
 
-GenerateSeats();
+//GenerateSeats();

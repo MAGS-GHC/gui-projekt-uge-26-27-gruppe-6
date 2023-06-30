@@ -24,14 +24,40 @@ button:disabled {
     height: 20%;
 }
 
-hr.dashed {
-    border-top: 2px dashed #999;
+.clickable {
+    cursor: pointer;
 }
 
-hr.dotted {
-    border-top: 2px dotted #999;
+.table td {
+    padding: 0.4rem !important;
+    /*padding-right: 0.5rem !important;*/
 }
 
-hr.solid {
-    border-top: 2px solid #999;
+.table td img {
+    max-height: 48px !important;
+}
+
+#bookingMenuTable {
+    margin-bottom: 0rem !important;
+}
+
+.rowh {
+    width: 5vw !important;
+}
+
+#bookingMenuTableHead2 {
+    margin: 0 !important;
+    opacity: 0 !important;
+}
+
+#bookingMenuTableHead2 th {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    line-height: 0 !important;
+}
+
+.rowborder {
+    border-right: 1px solid #c9c9cc;
 }
