@@ -150,8 +150,8 @@ function GenerateSeats() {
 	let seatArray = [];
 
 	for (let section = 0; section < sectionCapacity.length; section++) {
-        let seatsPerRow = Math.floor(sectionCapacity[section] / sectionRowNoArray[section]);
-        let seatsLeftOver = sectionCapacity[section] % sectionRowNoArray[section];
+    let seatsPerRow = Math.floor(sectionCapacity[section] / sectionRowNoArray[section]);
+    let seatsLeftOver = sectionCapacity[section] % sectionRowNoArray[section];
 
 		for (let row = 0; row < sectionRowNoArray[section]; row++) {
 			let totalRowSeats;
@@ -175,6 +175,8 @@ function GenerateSeats() {
 		}
 	}
 
+	createSeat(seatArray);
+
 	seatArray.forEach(seat => {
         createSeat(seat);
     });
@@ -182,10 +184,11 @@ function GenerateSeats() {
 
 //GenerateSeats();
 
-function createSeat(seat){
+function createSeat(seatArray){
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     
+	/*
     var raw = JSON.stringify({
       "id": seat.ID,
       "seatrowID": seat.SeatRowID,
@@ -193,11 +196,12 @@ function createSeat(seat){
       "booked": seat.Booked,
       "seatnumber": seat.SeatNo
     });
+	*/
     
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
-      body: raw,
+      body: seatArray,
       redirect: 'follow'
     };
     

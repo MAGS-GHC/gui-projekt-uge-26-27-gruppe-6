@@ -53,6 +53,8 @@ const sectionRowNoArray = [18, 6, 6, 6, 18, 18, 18, 18];
 const sectionNameArray = ["G", "H - Nedre", "I - Nedre", "J - Nedre", "K", "L", "M", "M - Fan"];
 const buttonIDArray = ["sectionG", "sectionHN", "sectionIN", "sectionJN", "sectionK", "sectionL", "sectionMF", "sectionM"];
 
+let loggedIn = false;
+
 
 function GenerateTestSeats() { //Danner testsæder og sæderækker til sektion G
 	let seatIDCounter = 0;
@@ -61,12 +63,12 @@ function GenerateTestSeats() { //Danner testsæder og sæderækker til sektion G
         let seatsPerRow = Math.floor(sectionCapacity[section] / sectionRowNoArray[section]);
         let seatsLeftOver = sectionCapacity[section] % sectionRowNoArray[section];
         let secRows = [];
-        let seatNumberCounter = 1;
+        //let seatNumberCounter = 1;
         let bookedSeatsCounter = 0;
 
         let bookingRange = Math.floor(Math.random() * 13);
         
-        console.log("Sektion: " + sectionNameArray[section] + ", bookingRange: " + bookingRange);
+        //console.log("Sektion: " + sectionNameArray[section] + ", bookingRange: " + bookingRange);
         
 
         for (let row = 0; row < sectionRowNoArray[section]; row++) {
@@ -89,9 +91,10 @@ function GenerateTestSeats() { //Danner testsæder og sæderækker til sektion G
                     bookedSeatsCounter++;
                 }
 
-                let newSeat = new Seat(seatIDCounter, seatNumberCounter, false, booked);
+                //let newSeat = new Seat(seatIDCounter, seatNumberCounter, false, booked);
+                let newSeat = new Seat(seatIDCounter, seat + 1, false, booked);
                 seatRowArray.push(newSeat);
-                seatNumberCounter++;
+                //seatNumberCounter++;
                 seatIDCounter++;
             }
 
@@ -111,6 +114,23 @@ function GenerateTestSeats() { //Danner testsæder og sæderækker til sektion G
 GenerateTestSeats();
 
 
+$("#testLoginBtn").on("click", function() {
+    TestLoginClick();
+});
+
+function TestLoginClick() {
+    if (!loggedIn) {
+        $("#testLoginBtn").removeClass("btn-danger");
+        $("#testLoginBtn").addClass("btn-success");
+        loggedIn = true;
+    }
+
+    else {
+        $("#testLoginBtn").removeClass("btn-success");
+        $("#testLoginBtn").addClass("btn-danger");
+        loggedIn = false;
+    }
+}
 
 
 // ---------------------------------- Opsætning ----------------------------------
@@ -134,6 +154,7 @@ function SetUpSectionButtons() {
             SectionButtonOnClick(i);
         });
     }
+
     $("#returnBtn").on("click", function() {
         ReturnButtonOnClick();
     });
@@ -147,17 +168,41 @@ function SectionButtonOnMouseEnter(buttonno) {
     SetSectionButtonText(buttonIDArray[buttonno], numberString);
 }
 
+
 function SectionButtonOnMouseLeave(buttonno) {
     SetSectionButtonText(buttonIDArray[buttonno], sectionArray[buttonno].Name);
 }
+
 
 function SectionButtonOnClick(buttonno) {
     ToggleView(0);
     SetUpBookingMenu(buttonno);
 }
 
+
 function ReturnButtonOnClick() {
     ToggleView(1);
+}
+
+
+function SeatReserveButtonOnClick() {
+    alert("Wew");
+}
+
+
+function SeatLogInButtonOnClick() {
+    ModalLogIn();
+    //alert("Log Ind, tak");
+}
+
+
+function LogInRegisterButtonOnClick() {
+    ModalRegister();
+}
+
+
+function RegisterReturnButtonOnClick() {
+    ModalLogIn();
 }
 
 
@@ -167,9 +212,11 @@ function CreateSectionButtonTextElement(buttonid) {
     $("#" + buttonid).append("<h5 id='" + buttonid + "Text' class='font-weight-light'>e</h5>");
 }
 
+
 function SetSectionButtonText(buttonid, text) {
     $("#" + buttonid + "Text").text(text);
 }
+
 
 function SetSectionButtonColourClass(buttonid, current, capacity) {
     let classString;
@@ -186,6 +233,7 @@ function SetSectionButtonColourClass(buttonid, current, capacity) {
 
     $("#" + buttonid).addClass(classString);
 }
+
 
 function ToggleView(state) {
     if (state === 0) {
@@ -207,6 +255,7 @@ function SetUpBookingMenu(section) {
     $("#bookingMenuSectionName").text("Sektion " + sectionArray[section].Name);
     BuildSeatTable(section);
 }
+
 
 function BuildSeatTable(section) {
     let tableContent = ["", ""];
@@ -256,22 +305,145 @@ function BuildSeatTable(section) {
     AttachSeatClickEvent();
 }
 
+
 function AttachSeatClickEvent() {
     $(".clickable").each(function() {
         $(this).on("click", function() {
-            Jesus(($(this).parent().attr("id")).slice(4));
+            ModalSeat(($(this).parent().attr("id")).slice(4));
         });
     });
 }
 
-function Jesus(seatid) {
-    alert(seatid);
-    /*
-    $("seatModalBodyText").text(seatid);
-    $("seatModal").modal('toggle');
-    */
-    
+
+// ---------------------------------- Modal ----------------------------------
+
+// Det ville være forfærdeligt meget nemmere her, hvis vi bare returnerede alle sæder her i en sektion, så sæder kan opdateres
+// Derudover et API endpoint, der returnerer et enkelt sæde til denne funktion
+
+
+function ModalApplyComponents(header, body, footer) {
+    $("#pageModalHeader").html(header);
+    $("#pageModalBody").html(body);
+
+    if (footer != null || footer != undefined || footer != "") {
+        $("#pageModalFooter").html(footer);
+    }
+
+    $('#pageModal').modal('handleUpdate');
 }
+
+
+function ModalCloseButtonHTML() {
+    let buttonhtml = 
+        "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" +
+        "<span aria-hidden='true'>&times;</span>" +
+        "</button>";
+
+    return buttonhtml;
+}
+
+
+function ModalSeat(seatid) {
+    let headerhtml = 
+        "<h5 id='pageModalHeaderTitle' class='modal-title'>Bestilling af sæde</h5>";
+
+    let bodyhtml = 
+        "<p id='pageModalBodyText'></p>";
+
+    ModalApplyComponents(headerhtml, bodyhtml);
+    ModalSeatButtonsHTML();
+
+    $("#pageModalBodyText").text(`Sæde ID: ${seatid}`); //Må gerne ændres til sædedata som fx rækkenr, sædenr, osv
+    
+    $("#pageModal").modal("show");
+}
+
+
+function ModalSeatButtonsHTML() {
+    let footerhtml = "";
+
+    if (loggedIn) {
+        footerhtml = 
+            "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Tilbage</button>" +
+            "<button id='seatReserveBtn' type='button' class='btn btn-success'>Køb</button>";
+
+        $("#pageModalFooter").html(footerhtml);
+
+        $("#seatReserveBtn").on("click", function() {
+            SeatReserveButtonOnClick();
+        });
+    }
+
+    else {
+        footerhtml = 
+            "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Tilbage</button>" +
+            "<button id='seatLoginBtn' type='button' class='btn btn-info'>Log Ind</button>";
+
+        $("#pageModalFooter").html(footerhtml);
+        
+        $("#seatLoginBtn").on("click", function() {
+            SeatLogInButtonOnClick();
+        });
+    }
+}
+
+
+function ModalLogIn() {
+    let headerhtml = 
+        "<h1 id='pageModalHeaderTitle' class='h3 font-weight-normal text-center w-100'>Log venligst ind</h1>";
+
+    let bodyhtml = 
+        "<form class='form-signin'>" +
+            "<label for='inputEmail' class='sr-only'>E-mail adresse</label>" +
+            "<input type='email' id='inputEmail' class='form-control' placeholder='E-mail adresse' required autofocus>" +
+            "<label for='inputPassword' class='sr-only'>Adgangskode</label>" +
+            "<input type='password' id='inputPassword' class='form-control' placeholder='Adgangskode' required>" +
+            "<div class='checkbox mb-3 text-center'>" +
+                "<label>" +
+                    "<input type='checkbox' value='remember-me'> Husk mig" +
+                "</label>" +
+            "</div>" +
+            "<button class='btn btn-lg btn-primary btn-block' type='submit'>Log Ind</button>" +
+        "</form>" +
+        "<button id='loginRegisterBtn' type='button' class='btn no-user-btn shadow-none d-block mx-auto mt-3'>" +
+            "<span class='no-user-text text-info'>Jeg har ikke en bruger</span>" +
+        "</button>";
+    
+    let footerhtml = 
+        "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Luk</button>";
+
+    ModalApplyComponents(headerhtml, bodyhtml, footerhtml);
+
+    $("#loginRegisterBtn").on("click", function() {
+        LogInRegisterButtonOnClick();
+    });
+}
+
+
+function ModalRegister() {
+    let headerhtml = 
+        "<h1 id='pageModalHeaderTitle' class='h3 font-weight-normal text-center w-100'>Ny bruger</h1>";
+
+    let bodyhtml = 
+        "<form class='form-signin'>" +
+            "<label for='inputEmail' class='sr-only'>E-mail adresse</label>" +
+            "<input type='email' id='inputEmail' class='form-control' placeholder='E-mail adresse' required autofocus>" +
+            "<label for='inputPassword' class='sr-only'>Adgangskode</label>" +
+            "<input type='password' id='inputPassword' class='form-control' placeholder='Adgangskode' required>" +
+            "<button class='btn btn-lg btn-primary btn-block' type='submit'>Opret</button>" +
+        "</form>";
+    
+    let footerhtml = 
+        "<button id='registerReturnBtn' type='button' class='btn btn-outline-info'>Tilbage</button>" +
+        "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Luk</button>";
+
+    ModalApplyComponents(headerhtml, bodyhtml, footerhtml);
+
+    $("#registerReturnBtn").on("click", function() {
+        RegisterReturnButtonOnClick();
+    });
+}
+
 
 function ActiveSeatImagePath(seat) {
     let seatPath;
