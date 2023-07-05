@@ -18,7 +18,7 @@ var requestOptions = {
     //   .then(resultSeats => console.log(resultSeats))
     //   .catch(error => console.log('error', error));
 
-    const ApiFetch = () => {
+    const apiFetch = () => {
       const url = `http://localhost:4000/api/seats/`;
       const fetchApi = new Promise((resolve, reject) => {
         fetch(url)
@@ -37,4 +37,4 @@ var requestOptions = {
           console.log(sortedSeats)
       });
     };
-  ApiFetch()
+  apiFetch()
