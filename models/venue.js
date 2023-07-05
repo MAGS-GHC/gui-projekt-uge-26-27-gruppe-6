@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 let venueSchema = new Schema(
     {
-        id:         {type: Number}, 
+        _id:         {type: Number}, 
         town:     {type: String},
         capacity:   {type: Number}
     }
