@@ -39,19 +39,19 @@ venuerouter.get("/:id", (req, res) => {
 venuerouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  venue.findByIdAndUpdate(id, req.body)
+  venue.findByIdAndUpdate(_id, req.body)
     .then((data) => {
       if (!data) {
         res
           .status(404)
-          .send({ message: "cant update, maybe id is not there" + id });
+          .send({ message: "cant update, maybe id is not there" + _id });
       } else {
         res.send({ message: "update succesfull" });
       }
     })
 
     .catch((err) => {
-      res.status(500).send({ message: "error updating with id " + id });
+      res.status(500).send({ message: "error updating with id " + _id });
     });
 });
 
@@ -59,19 +59,19 @@ venuerouter.put("/:id", (req, res) => {
 venuerouter.delete("/:id", (req, res) => {
   const id = req.params.id;
 
-  venue.findByIdAndDelete(id)
+  venue.findByIdAndDelete(_id)
     .then((data) => {
       if (!data) {
         res
           .status(404)
-          .send({ message: "cant delete, maybe id is not there" + id });
+          .send({ message: "cant delete, maybe id is not there" + _id });
       } else {
         res.send({ message: "delete succesfull" });
       }
     })
 
     .catch((err) => {
-      res.status(500).send({ message: "cannot delete   " + id });
+      res.status(500).send({ message: "cannot delete   " + _id });
     });
 });
 

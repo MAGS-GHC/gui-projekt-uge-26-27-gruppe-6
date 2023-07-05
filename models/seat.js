@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 let seatSchema = new Schema(
     {
-        id:         {type: Number},
+        _id:         {type: Number},
         seatrowID:  {type: Number},
         reserved:   {type: Boolean},
         booked:     {type: Boolean},

@@ -33,40 +33,40 @@ seatrowrouter.get("/:id", (req, res) => {
 });
 
 seatrowrouter.put("/:id", (req, res) => {
-  const id = req.params.id;
+  const _id = req.params.id;
 
-  seatrow.findByIdAndUpdate(id, req.body)
+  seatrow.findByIdAndUpdate(_id, req.body)
     .then((data) => {
       if (!data) {
         res
           .status(404)
-          .send({ message: "cant update, maybe id is not there" + id });
+          .send({ message: "cant update, maybe id is not there" + _id });
       } else {
         res.send({ message: "update succesfull" });
       }
     })
 
     .catch((err) => {
-      res.status(500).send({ message: "error updating with id " + id });
+      res.status(500).send({ message: "error updating with id " + _id });
     });
 });
 
 seatrowrouter.delete("/:id", (req, res) => {
-  const id = req.params.id;
+  const _id = req.params.id;
 
-  seatrow.findByIdAndDelete(id)
+  seatrow.findByIdAndDelete(_id)
     .then((data) => {
       if (!data) {
         res
           .status(404)
-          .send({ message: "cant delete, maybe id is not there" + id });
+          .send({ message: "cant delete, maybe id is not there" + _id });
       } else {
         res.send({ message: "delete succesfull" });
       }
     })
 
     .catch((err) => {
-      res.status(500).send({ message: "cannot delete   " + id });
+      res.status(500).send({ message: "cannot delete   " + _id });
     });
 });
 

@@ -6,8 +6,8 @@ class SeatRow {
     SectionID;
 	RowNo;
 
-    constructor(id, sectionid, rowno) {
-        this.ID = id;
+    constructor(_id, sectionid, rowno) {
+        this.ID = _id;
         this.SectionID = sectionid;
 		this.RowNo = rowno;
     }
@@ -20,8 +20,8 @@ class Seat {
 	Booked;
 	SeatNo;
 
-	constructor(id, seatrowid, reserved, booked, seatno) {
-        this.ID = id;
+	constructor(_id, seatrowid, reserved, booked, seatno) {
+        this.ID = _id;
         this.SeatRowID = seatrowid;
 		this.Reserved = reserved;
 		this.Booked = booked;
