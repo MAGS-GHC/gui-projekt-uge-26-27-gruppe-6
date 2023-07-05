@@ -40,39 +40,39 @@ sectionrouter.get("/:id", (req, res) => {
 sectionrouter.put("/:id", (req, res) => {
   const id = req.params.id;
 
-  section.findByIdAndUpdate(id, req.body)
+  section.findByIdAndUpdate(_id, req.body)
     .then((data) => {
       if (!data) {
         res
           .status(404)
-          .send({ message: "cant update, maybe id is not there" + id });
+          .send({ message: "cant update, maybe id is not there" + _id });
       } else {
         res.send({ message: "update succesfull" });
       }
     })
 
     .catch((err) => {
-      res.status(500).send({ message: "cannot find  " + id });
+      res.status(500).send({ message: "cannot find  " + _id });
     });
 });
 
 // delete data
 sectionrouter.delete("/:id", (req, res) => {
-  const id = req.params.id;
+  const _id = req.params.id;
 
-  section.findByIdAndDelete(id)
+  section.findByIdAndDelete(_id)
     .then((data) => {
       if (!data) {
         res
           .status(404)
-          .send({ message: "cant delete, maybe id is not there" + id });
+          .send({ message: "cant delete, maybe id is not there" + _id });
       } else {
         res.send({ message: "delete succesfull" });
       }
     })
 
     .catch((err) => {
-      res.status(500).send({ message: "cannot delete   " + id });
+      res.status(500).send({ message: "cannot delete   " + _id });
     });
 });
 module.exports = sectionrouter;
