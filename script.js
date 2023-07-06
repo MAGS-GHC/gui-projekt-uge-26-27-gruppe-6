@@ -1,4 +1,5 @@
-// ---------------------------------- Klasser? ----------------------------------
+// ---------------------------------- Klasser ----------------------------------
+//Her defineres klasser til brug i brugerflade og intern funktionalitet
 
 class Seat {
     SeatID;
@@ -47,18 +48,19 @@ class Section {
 }
 
 
-// ---------------------------------- Opsætning ----------------------------------
 
-const seatFreePath = "/images/seat_free.png";
-const seatReservedPath = "/images/seat_reserved.png";
-const seatBookedPath = "/images/seat_booked.png";
+// ---------------------------------- Opsætning ----------------------------------
+//Når siden indlæses, kører disse funktioner og kald
 
 const sectionArray = [];
 const buttonIDArray = ["sectionG", "sectionHN", "sectionIN", "sectionJN", "sectionK", "sectionL", "sectionMF", "sectionM"];
 
+
+//Testfunktionalitet til ufærdigt login
 let loggedIn = false;
 
 
+//Her hentes sektionerne fra databasen
 async function GetSections() {
     let requestOptions = {
         method: 'GET',
@@ -71,6 +73,8 @@ async function GetSections() {
     return json;
 }
 
+
+//Her hentes sæderækkerne fra databasen
 async function GetSeatRows() {
     let requestOptions = {
         method: 'GET',
@@ -83,6 +87,8 @@ async function GetSeatRows() {
     return json;
 }
 
+
+//Her hentes sæderne fra databasen
 async function GetSeats() {
     let requestOptions = {
         method: 'GET',
@@ -96,17 +102,22 @@ async function GetSeats() {
 }
 
 
+//Tilføjer funktionalitet til test loginfunktionknap
 $("#testLoginBtn").on("click", function() {
     TestLoginClick();
 });
 
+
+//Ditto
 function TestLoginClick() {
+    //Hvis ikke logget ind, logger den ind og skifter farven på knappen
     if (!loggedIn) {
         $("#testLoginBtn").removeClass("btn-danger");
         $("#testLoginBtn").addClass("btn-success");
         loggedIn = true;
     }
 
+    //Samme men ikke helt det samme
     else {
         $("#testLoginBtn").removeClass("btn-success");
         $("#testLoginBtn").addClass("btn-danger");
@@ -115,29 +126,29 @@ function TestLoginClick() {
 }
 
 
-
+//Her bliver vores databasedata skrevet om til vores objektmodel
+//Da vores antal af sektioner, rækker og sæder er fleksible, bør algoritmen også være fleksibel, og derfor bruges nestede foreach loops
 async function BuildSections(sectionData, seatRowData, seatData) {
-    sectionData.forEach(section => {
-        let secRows = [];
-        let bookedSeatsCounter = 0;
+    sectionData.forEach(section => { //For at opfylde vores objektmodel, skal hver sektion indeholde alle relevante rækker og dem med alle relevante sæder
+        let secRows = []; //midlertidigt array til at holde på hver sektions rækker
+        let bookedSeatsCounter = 0; //tæller op mht hvor mange sæder er bookede, så det kan vises til brugeren
 
-        let matchingSeatRows = seatRowData.filter(seatRow => {
+        let matchingSeatRows = seatRowData.filter(seatRow => { //finder alle rækker med passende sektion id
             return seatRow.sectionID === section._id;
         })
-        //console.log(matchingSeatRows);
 
-        matchingSeatRows.forEach(seatRow => {
+        matchingSeatRows.forEach(seatRow => { //Den samme proces sker egentlig for rækker
             let seatRowArray = [];
 
             let matchingSeats = seatData.filter(seat => {
                 return seat.seatrowID === seatRow._id;
             })
 
-            matchingSeats.forEach(seat => {
+            matchingSeats.forEach(seat => { //hvert passende sæde bliver tilføjet til rækken
                 let newSeat = new Seat(seat._id, seat.seatnumber + 1, seat.reserved, seat.booked);
 
                 if (seat.booked) {
-                    bookedSeatsCounter++;
+                    bookedSeatsCounter++; //hvis sædet er booket, tælles der op for sektionen
                 }
 
                 seatRowArray.push(newSeat);
@@ -152,12 +163,15 @@ async function BuildSections(sectionData, seatRowData, seatData) {
     });
 }
 
+
+//Nu har vi al vores data i objekterne, og kan gå i gang med at sætte brugerfladen op
 function SetUpSectionButtons() {
     for (let i = 0; i < sectionArray.length; i++) {
-        CreateSectionButtonTextElement(buttonIDArray[i]);
-        SetSectionButtonText(buttonIDArray[i], sectionArray[i].Name);
-        SetSectionButtonColourClass(buttonIDArray[i], sectionArray[i].Reserved, sectionArray[i].Capacity);
+        CreateSectionButtonTextElement(buttonIDArray[i]); //Tilføjer tekst til vores sektionsknapper
+        SetSectionButtonText(buttonIDArray[i], sectionArray[i].Name); //Sætter valgte knaps tekst til sendt tekst
+        SetSectionButtonColourClass(buttonIDArray[i], sectionArray[i].Reserved, sectionArray[i].Capacity); //Sætter knappens farve til at reflektere ledige pladser
 
+        //Tilføjer mus events til sektionsknapper
         $("#" + buttonIDArray[i]).on("mouseenter", function() {
             SectionButtonOnMouseEnter(i);
         });
@@ -169,92 +183,105 @@ function SetUpSectionButtons() {
         });
     }
 
+    //Tillader at gå frem og tilbage mellem vores "sider"
     $("#returnBtn").on("click", function() {
         ReturnButtonOnClick();
     });
 }
 
 
+//Her bygges siden, når den indlæses
 async function BuildPage() {
-    $("#bookingMenu").hide();
+    $("#bookingMenu").hide(); //Gemmer vores anden side, så de kan skiftes imellem senere
 
-    let sectionData = await GetSections();
-    let seatRowData = await GetSeatRows();
-    let seatData = await GetSeats();
+    let sectionData = await GetSections(); //henter sektion JSON fra databasen
+    let seatRowData = await GetSeatRows(); //henter sæderække JSON fra databasen
+    let seatData = await GetSeats(); //henter sæde JSON fra databasen
 
+    //Sorterer vores JSON efter ID, så de er nemmere at arbejde med?
     sectionData.sort((a,b) => a._id - b._id);
     seatRowData.sort((a,b) => a._id - b._id);
     seatData.sort((a,b) => a._id - b._id);
 
-    await BuildSections(sectionData, seatRowData, seatData);
+    await BuildSections(sectionData, seatRowData, seatData); //Tidligere defineret funktion, der tager vores JSON og laver det om til store sektionobjekter
 
-    console.log(sectionArray);
-
-
-
-    SetUpSectionButtons();
+    SetUpSectionButtons(); //Funktion ovenover, der laver vores UI til stadion
 }
 
+BuildPage(); //Køres, når siden er indlæst
 
 
-BuildPage();
 
 // ---------------------------------- Knap Funktionalitet ----------------------------------
+//Her bliver knappernes onclick events defineret. De er skrevet til at kalde andre metoder for at være nemmere at læse
 
+//Hver gang musen er over en sektion ved stadion, vises ledige sæder i stedet for navn
 function SectionButtonOnMouseEnter(buttonno) {
     let numberString = (sectionArray[buttonno].Capacity - sectionArray[buttonno].Reserved)+ " / " + sectionArray[buttonno].Capacity;
     SetSectionButtonText(buttonIDArray[buttonno], numberString);
 }
 
 
+//Modsat
 function SectionButtonOnMouseLeave(buttonno) {
     SetSectionButtonText(buttonIDArray[buttonno], sectionArray[buttonno].Name);
 }
 
 
+//Når sektionen klikkes på, bygges og vises et detaljeret overblik over sektionen i stedet
 function SectionButtonOnClick(buttonno) {
     ToggleView(0);
     SetUpBookingMenu(buttonno);
 }
 
 
+//Går tilbage til at vise stadion
 function ReturnButtonOnClick() {
     ToggleView(1);
 }
 
 
+//Når man forsøger at booke et sæde
 function SeatReserveButtonOnClick(seatid) {
     BookSeat(seatid);
 }
 
 
+//Når man ikke er logget ind og prøver at booke et sæde
 function SeatLogInButtonOnClick() {
     ModalLogIn();
 }
 
 
+//Når man ikke har en bruger ved login
 function LogInRegisterButtonOnClick() {
     ModalRegister();
 }
 
 
+//Går tilbage til login modal fra registrér modal
 function RegisterReturnButtonOnClick() {
     ModalLogIn();
 }
 
 
-// ---------------------------------- Knap Funktionalitet #2 ----------------------------------
 
+// ---------------------------------- Knap Funktionalitet #2 ----------------------------------
+//Her bliver de fleste af knapmetoderne definerede
+
+//Skaber et nyt tekstelement i vores sektionsknapper med ID
 function CreateSectionButtonTextElement(buttonid) {
     $("#" + buttonid).append("<h5 id='" + buttonid + "Text' class='font-weight-light'>e</h5>");
 }
 
 
+//Sætter sektionsknappens tekst via ID
 function SetSectionButtonText(buttonid, text) {
     $("#" + buttonid + "Text").text(text);
 }
 
 
+//Sætter sektionsknappens farve via ID
 function SetSectionButtonColourClass(buttonid, current, capacity) {
     let classString;
     let percentage = current / capacity;
@@ -272,6 +299,7 @@ function SetSectionButtonColourClass(buttonid, current, capacity) {
 }
 
 
+//Går frem og tilbage via vores stadion og sektionsoverblik
 function ToggleView(state) {
     if (state === 0) {
         $("#bookingMap").fadeOut("fast", function() {
@@ -286,63 +314,67 @@ function ToggleView(state) {
 }
 
 
+function BookSeat(seatid) {
+
+}
+
+
+function GetSeatInfo(seatid) {
+
+}
+
+
+
 // ---------------------------------- Sædebooking ----------------------------------
 
+//Viser navn på sektion og kalder på at få bygget sektionsoverblikket
 function SetUpBookingMenu(section) {
     $("#bookingMenuSectionName").text("Sektion " + sectionArray[section].Name);
     BuildSeatTable(section);
 }
 
 
+//Her bygges vores sektionsoverblik
 function BuildSeatTable(section) {
-    let tableContent = ["", ""];
-    let firstRowLength = sectionArray[section].Rows[0].Seats.length;
-    let activeTable = 0;
+    let tableContent = ["", ""]; //Bruger lidt magi til at sætte vores ujævne rækker ind i hvad der *ligner* én tabel, men faktisk er to
+    let firstRowLength = sectionArray[section].Rows[0].Seats.length; //Sætter et loft på hvor mange sæder, der skal forventes på en række
+    let activeTable = 0; //Starter med at fylde i første tabel
 
-    for (let row = 0; row < sectionArray[section].Rows.length; row++) { 
-        if (sectionArray[section].Rows[row].Seats.length != firstRowLength) {
-            activeTable = 1;
+    for (let row = 0; row < sectionArray[section].Rows.length; row++) {
+        if (sectionArray[section].Rows[row].Seats.length != firstRowLength) { //Hvis nuværende række i loopet har færre sæder end første, sættes ind i alternativ tabel
+            activeTable = 1; //Begynder nu at fylde i anden tabel. Dette gøres for at få sæderne til at fylde en hel række på siden
         }
 
-        tableContent[activeTable] += "<tr><th scope='row' class='rowborder align-middle text-center'>" + (row + 1) + "</th>";
+        tableContent[activeTable] += "<tr><th scope='row' class='rowborder align-middle text-center'>" + (row + 1) + "</th>"; //Rækkenr på venstre side
 
-        for (let seat = 0; seat < sectionArray[section].Rows[row].Seats.length; seat++) { //totalRowSeats
+        for (let seat = 0; seat < sectionArray[section].Rows[row].Seats.length; seat++) { //Itererer igennem hvert sæde i række
             let currentSeat = sectionArray[section].Rows[row].Seats[seat];
-            let seatPath;
-            let clickable;
+            let seatPath = ActiveSeatImagePath(currentSeat); //Definerer, hvilket path et sæde skal bruge til at finde sit billede
 
-            if (currentSeat.Booked) {
-                seatPath = seatBookedPath;
-                clickable = false;
-            }
-            else if (currentSeat.Reserved) {
-                seatPath = seatReservedPath;
-                clickable = false;
-            }
-            else {
-                seatPath = seatFreePath;
-                clickable = true;
-            }
-
-            if (clickable) {
-                tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' class='align-middle text-center'>" +
-                "<img src='" + seatPath + "' class='img-fluid clickable'></td>"; //style='height: 32px; width: 32px;' class='img-fluid'   
-            }
-            else {
+            //Giver knapfunktionalitet hvis frit og sætter sæde ind i HTML string
+            if (currentSeat.Booked || currentSeat.Reserved) {
                 tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' class='align-middle text-center'>" +
                 "<img src='" + seatPath + "' class='img-fluid'></td>"; 
             }
+            else {
+                tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' class='align-middle text-center'>" +
+                "<img src='" + seatPath + "' class='img-fluid clickable'></td>"; 
+            }
+            
         }
-        tableContent[activeTable] += "</tr>";
+        tableContent[activeTable] += "</tr>"; //Afslutter row
     }
 
+    //Erstatter tabellernes HTML med de lange strings
     $("#bookingMenuTableBody").html(tableContent[0]);
     $("#bookingMenuTableBody2").html(tableContent[1]);
 
+    //Tilføjer onclick events til frie sæder
     AttachSeatClickEvent();
 }
 
 
+//Når et frit sæde klikkes på, åbnes vores modal vindue og sender sædets ID
 function AttachSeatClickEvent() {
     $(".clickable").each(function() {
         $(this).on("click", function() {
@@ -352,12 +384,10 @@ function AttachSeatClickEvent() {
 }
 
 
+
 // ---------------------------------- Modal ----------------------------------
 
-// Det ville være forfærdeligt meget nemmere her, hvis vi bare returnerede alle sæder her i en sektion, så sæder kan opdateres
-// Derudover et API endpoint, der returnerer et enkelt sæde til denne funktion
-
-
+//Samlefunktion til anvendte header, body og footer og opdaterer dimensioner
 function ModalApplyComponents(header, body, footer) {
     $("#pageModalHeader").html(header);
     $("#pageModalBody").html(body);
@@ -370,16 +400,7 @@ function ModalApplyComponents(header, body, footer) {
 }
 
 
-function ModalCloseButtonHTML() {
-    let buttonhtml = 
-        "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>" +
-        "<span aria-hidden='true'>&times;</span>" +
-        "</button>";
-
-    return buttonhtml;
-}
-
-
+//Her vises et sæde, der er klikket på
 function ModalSeat(seatid) {
     let headerhtml = 
         "<h5 id='pageModalHeaderTitle' class='modal-title'>Bestilling af sæde</h5>";
@@ -396,6 +417,7 @@ function ModalSeat(seatid) {
 }
 
 
+//Laver knapperne i bunden i sæde modal, afhængig af, om man er logget ind
 function ModalSeatButtonsHTML(seatid) {
     let footerhtml = "";
 
@@ -425,6 +447,7 @@ function ModalSeatButtonsHTML(seatid) {
 }
 
 
+//Loginsiden i modal. Indeholder en form
 function ModalLogIn() {
     let headerhtml = 
         "<h1 id='pageModalHeaderTitle' class='h3 font-weight-normal text-center w-100'>Log venligst ind</h1>";
@@ -457,6 +480,7 @@ function ModalLogIn() {
 }
 
 
+//Modal til registrering af ny bruger. Indeholder en form
 function ModalRegister() {
     let headerhtml = 
         "<h1 id='pageModalHeaderTitle' class='h3 font-weight-normal text-center w-100'>Ny bruger</h1>";
@@ -482,26 +506,18 @@ function ModalRegister() {
 }
 
 
-
-function BookSeat(seatid) {
-
-}
-
-
-
-
-
+//Billedefilstier
 function ActiveSeatImagePath(seat) {
     let seatPath;
 
     if (seat.Booked) {
-        seatPath = seatBookedPath;
+        seatPath = "/images/seat_booked.png";
     }
     else if (seat.Reserved) {
-        seatPath = seatReservedPath;
+        seatPath = "/images/seat_reserved.png";
     }
     else {
-        seatPath = seatFreePath;
+        seatPath = "/images/seat_free.png";
     }
     
     return seatPath;
