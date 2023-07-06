@@ -314,8 +314,33 @@ function ToggleView(state) {
 }
 
 
+//Når brugeren trykker "Køb" på et sæde. Booker og reserverer det valgte og købte sæde i databasen
 function BookSeat(seatid) {
-
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+  
+    var raw = JSON.stringify({
+        "reserved": true,
+        "booked": true
+    });
+  
+    var requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+  
+    fetch(`http://localhost:4000/api/seats/${seatid}`, requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    
+    //Clientside løsning på at vise sædet som booket, ikke anbefalet til offentligt produkt
+    $("#seat" + seatid).children().removeClass("clickable");
+    $("#seat" + seatid).children().off("click");
+    $("#seat" + seatid).children().attr("src", "/images/seat_booked.png");
+    $("#pageModal").modal("hide");
 }
 
 
@@ -360,7 +385,6 @@ function BuildSeatTable(section) {
                 tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' class='align-middle text-center'>" +
                 "<img src='" + seatPath + "' class='img-fluid clickable'></td>"; 
             }
-            
         }
         tableContent[activeTable] += "</tr>"; //Afslutter row
     }
