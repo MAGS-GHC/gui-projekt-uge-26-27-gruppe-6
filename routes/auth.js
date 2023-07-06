@@ -71,12 +71,6 @@ authRouter.post("/login", async (req,res)=>{
             error:null,
             data: {token}
         })
-
-
-  
 });
-
-
- 
 
 module.exports = authRouter;
