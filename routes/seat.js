@@ -49,7 +49,7 @@ seatrouter.get("/:id", (req, res) => {
 // const id = req.params.id er indtastet til sidst i URL'en fx. localhost:4000/api/seat/fnwdigom2ie913990qgmf
 // den finder du ved at bruge get command på localhost:4000/api/seat/
 seatrouter.put("/:id", (req, res) => {
-  const id = req.params.id;
+  const _id = req.params.id;
 
   seat.findByIdAndUpdate(_id, req.body)
     .then((data) => {

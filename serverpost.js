@@ -178,6 +178,8 @@ function GenerateSeats() {
   });
 }
 
+
+
 //GenerateSeats();
 
 function createSeat(seat) {
