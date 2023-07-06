@@ -286,20 +286,20 @@ function SetSectionButtonColourClass(buttonid, current, capacity) {
     let classString;
     let percentage = current / capacity;
 
-    if (percentage == 1)
+    if (percentage == 1) //Fuldt booket bliver sort
         classString = "btn-dark";
-    else if (percentage > 0.9)
+    else if (percentage > 0.9) //mindre end 10% tilbage bliver rød
         classString = "btn-danger";
-    else if (percentage > 0.7)
+    else if (percentage > 0.7) //mindre end 30% tilbage bliver gul
         classString = "btn-warning";
-    else
+    else //30% eller over tilbage bliver grøn
         classString = "btn-success";
 
     $("#" + buttonid).addClass(classString);
 }
 
 
-//Går frem og tilbage via vores stadion og sektionsoverblik
+//Går frem og tilbage via vores stadion og sektionsoverblik med en JQuery animation
 function ToggleView(state) {
     if (state === 0) {
         $("#bookingMap").fadeOut("fast", function() {
@@ -365,7 +365,7 @@ function BuildSeatTable(section) {
         tableContent[activeTable] += "</tr>"; //Afslutter row
     }
 
-    //Erstatter tabellernes HTML med de lange strings
+    //Erstatter tabellernes HTML med de lange strings, så der undgås uønsket data fra andre kilder ved altid at nulstille
     $("#bookingMenuTableBody").html(tableContent[0]);
     $("#bookingMenuTableBody2").html(tableContent[1]);
 
