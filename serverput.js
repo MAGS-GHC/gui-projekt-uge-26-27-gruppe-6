@@ -16,7 +16,7 @@ function updateSeat(){
     redirect: 'follow'
   };
   
-  fetch(`http://localhost:4000/api/seats/${seat[i].id}`, requestOptions)
+  fetch(`http://localhost:4000/api/seats/${id}`, requestOptions)
     .then(response => response.text())
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
