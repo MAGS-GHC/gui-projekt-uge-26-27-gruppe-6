@@ -340,12 +340,9 @@ function BookSeat(seatid) {
     $("#seat" + seatid).children().removeClass("clickable");
     $("#seat" + seatid).children().off("click");
     $("#seat" + seatid).children().attr("src", "/images/seat_booked.png");
+
+    //Lukker modal, så der ikke bookes på samme sæde flere gange ved uheld
     $("#pageModal").modal("hide");
-}
-
-
-function GetSeatInfo(seatid) {
-
 }
 
 
@@ -378,11 +375,11 @@ function BuildSeatTable(section) {
 
             //Giver knapfunktionalitet hvis frit og sætter sæde ind i HTML string
             if (currentSeat.Booked || currentSeat.Reserved) {
-                tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' class='align-middle text-center'>" +
+                tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' data-row='" + (row + 1) + "' data-seat='" + (seat + 1) + "' class='align-middle text-center'>" +
                 "<img src='" + seatPath + "' class='img-fluid'></td>"; 
             }
             else {
-                tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' class='align-middle text-center'>" +
+                tableContent[activeTable] += "<td id='seat" + sectionArray[section].Rows[row].Seats[seat].SeatID + "' data-row='" + (row + 1) + "' data-seat='" + (seat + 1) + "' class='align-middle text-center'>" +
                 "<img src='" + seatPath + "' class='img-fluid clickable'></td>"; 
             }
         }
@@ -435,7 +432,8 @@ function ModalSeat(seatid) {
     ModalApplyComponents(headerhtml, bodyhtml);
     ModalSeatButtonsHTML(seatid);
 
-    $("#pageModalBodyText").text(`Sæde ID: ${seatid}`); //Må gerne ændres til sædedata som fx rækkenr, sædenr, osv
+    //Viser sædenr og rækkenr, skal gerne vise bookinginfo og lign, men det har vi ikke nået
+    $("#pageModalBodyText").text("Sæde " + $("#seat" + seatid).data("seat") + ", Række " + $("#seat" + seatid).data("row"));
     
     $("#pageModal").modal("show");
 }
