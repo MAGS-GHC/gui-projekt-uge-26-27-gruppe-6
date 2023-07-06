@@ -15,103 +15,85 @@ class Seat {
 }
 
 class SeatRow {
+    RowID;
     RowNo;
     Seats;
 
-    constructor(rowno, seats) {
+    constructor(rowid, rowno, seats) {
+        this.RowID = rowid;
         this.RowNo = rowno;
         this.Seats = seats;
     }
 }
 
 class Section {
+    SectionID;
     Name;
     Reserved;
     Capacity;
+    Standing;
     Available;
     Rows;
 
-    constructor(name, reserved, capacity, available, rows) {
+    constructor(sectionid, name, reserved, capacity, standing, available, rows) {
+        this.SectionID = sectionid;
         this.Name = name;
         this.Reserved = reserved;
         this.Capacity = capacity;
+        this.Standing = standing;
         this.Available = available;
         this.Rows = rows;
     }
 }
 
 
-// ---------------------------------- TEST METODER ----------------------------------
+// ---------------------------------- Opsætning ----------------------------------
 
 const seatFreePath = "/images/seat_free.png";
 const seatReservedPath = "/images/seat_reserved.png";
 const seatBookedPath = "/images/seat_booked.png";
 
 const sectionArray = [];
-const sectionCapacity = [280, 150, 150, 150, 230, 600, 300, 600];
-const sectionRowNoArray = [18, 6, 6, 6, 18, 18, 18, 18];
-const sectionNameArray = ["G", "H - Nedre", "I - Nedre", "J - Nedre", "K", "L", "M", "M - Fan"];
 const buttonIDArray = ["sectionG", "sectionHN", "sectionIN", "sectionJN", "sectionK", "sectionL", "sectionMF", "sectionM"];
 
 let loggedIn = false;
 
 
-function GenerateTestSeats() { //Danner testsæder og sæderækker til sektion G
-	let seatIDCounter = 0;
+async function GetSections() {
+    let requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
 
-    for (let section = 0; section < sectionCapacity.length; section++) {
-        let seatsPerRow = Math.floor(sectionCapacity[section] / sectionRowNoArray[section]);
-        let seatsLeftOver = sectionCapacity[section] % sectionRowNoArray[section];
-        let secRows = [];
-        //let seatNumberCounter = 1;
-        let bookedSeatsCounter = 0;
+    const response = await fetch("http://localhost:4000/api/sections/", requestOptions);
+    const json = await response.json();
 
-        let bookingRange = Math.floor(Math.random() * 13);
-        
-        //console.log("Sektion: " + sectionNameArray[section] + ", bookingRange: " + bookingRange);
-        
-
-        for (let row = 0; row < sectionRowNoArray[section]; row++) {
-            let seatRowArray = [];
-            let totalRowSeats;
-            
-            if (seatsLeftOver > 0) {
-                totalRowSeats = seatsPerRow + 1;
-            }
-            else {
-                totalRowSeats = seatsPerRow;
-            }
-
-            for (let seat = 0; seat < totalRowSeats; seat++) {
-                let booked = false;
-                
-                let bookingChance = Math.floor(Math.random() * 13);
-                if ((12 - bookingRange) <= bookingChance) { //tilfældig rate af booking per sektion
-                    booked = true;
-                    bookedSeatsCounter++;
-                }
-
-                //let newSeat = new Seat(seatIDCounter, seatNumberCounter, false, booked);
-                let newSeat = new Seat(seatIDCounter, seat + 1, false, booked);
-                seatRowArray.push(newSeat);
-                //seatNumberCounter++;
-                seatIDCounter++;
-            }
-
-            if (seatsLeftOver > 0) {
-                seatsLeftOver--;
-            }
-
-            let newSeatRow = new SeatRow(row, seatRowArray);
-            secRows.push(newSeatRow);
-        }
-
-        let newSection = new Section(sectionNameArray[section], bookedSeatsCounter, sectionCapacity[section], true, secRows);
-        sectionArray.push(newSection);
-    }
+    return json;
 }
 
-GenerateTestSeats();
+async function GetSeatRows() {
+    let requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    const response = await fetch("http://localhost:4000/api/seatrows/", requestOptions);
+    const json = await response.json();
+
+    return json;
+}
+
+async function GetSeats() {
+    let requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    const response = await fetch("http://localhost:4000/api/seats/", requestOptions);
+    const json = await response.json();
+
+    return json;
+}
 
 
 $("#testLoginBtn").on("click", function() {
@@ -133,10 +115,42 @@ function TestLoginClick() {
 }
 
 
-// ---------------------------------- Opsætning ----------------------------------
 
-$("#bookingMenu").hide();
-SetUpSectionButtons();
+async function BuildSections(sectionData, seatRowData, seatData) {
+    sectionData.forEach(section => {
+        let secRows = [];
+        let bookedSeatsCounter = 0;
+
+        let matchingSeatRows = seatRowData.filter(seatRow => {
+            return seatRow.sectionID === section._id;
+        })
+        //console.log(matchingSeatRows);
+
+        matchingSeatRows.forEach(seatRow => {
+            let seatRowArray = [];
+
+            let matchingSeats = seatData.filter(seat => {
+                return seat.seatrowID === seatRow._id;
+            })
+
+            matchingSeats.forEach(seat => {
+                let newSeat = new Seat(seat._id, seat.seatnumber + 1, seat.reserved, seat.booked);
+
+                if (seat.booked) {
+                    bookedSeatsCounter++;
+                }
+
+                seatRowArray.push(newSeat);
+            });
+
+            let newSeatRow = new SeatRow(seatRow._id, seatRow.rownumber + 1, seatRowArray);
+            secRows.push(newSeatRow);
+        });
+
+        let newSection = new Section(section._id, section.name, bookedSeatsCounter, section.capacity, section.standing, section.available, secRows);
+        sectionArray.push(newSection);
+    });
+}
 
 function SetUpSectionButtons() {
     for (let i = 0; i < sectionArray.length; i++) {
@@ -161,10 +175,34 @@ function SetUpSectionButtons() {
 }
 
 
+async function BuildPage() {
+    $("#bookingMenu").hide();
+
+    let sectionData = await GetSections();
+    let seatRowData = await GetSeatRows();
+    let seatData = await GetSeats();
+
+    sectionData.sort((a,b) => a._id - b._id);
+    seatRowData.sort((a,b) => a._id - b._id);
+    seatData.sort((a,b) => a._id - b._id);
+
+    await BuildSections(sectionData, seatRowData, seatData);
+
+    console.log(sectionArray);
+
+
+
+    SetUpSectionButtons();
+}
+
+
+
+BuildPage();
+
 // ---------------------------------- Knap Funktionalitet ----------------------------------
 
 function SectionButtonOnMouseEnter(buttonno) {
-    let numberString = sectionArray[buttonno].Reserved + " / " + sectionArray[buttonno].Capacity;
+    let numberString = (sectionArray[buttonno].Capacity - sectionArray[buttonno].Reserved)+ " / " + sectionArray[buttonno].Capacity;
     SetSectionButtonText(buttonIDArray[buttonno], numberString);
 }
 
@@ -185,14 +223,13 @@ function ReturnButtonOnClick() {
 }
 
 
-function SeatReserveButtonOnClick() {
-    alert("Wew");
+function SeatReserveButtonOnClick(seatid) {
+    BookSeat(seatid);
 }
 
 
 function SeatLogInButtonOnClick() {
     ModalLogIn();
-    //alert("Log Ind, tak");
 }
 
 
@@ -351,7 +388,7 @@ function ModalSeat(seatid) {
         "<p id='pageModalBodyText'></p>";
 
     ModalApplyComponents(headerhtml, bodyhtml);
-    ModalSeatButtonsHTML();
+    ModalSeatButtonsHTML(seatid);
 
     $("#pageModalBodyText").text(`Sæde ID: ${seatid}`); //Må gerne ændres til sædedata som fx rækkenr, sædenr, osv
     
@@ -359,7 +396,7 @@ function ModalSeat(seatid) {
 }
 
 
-function ModalSeatButtonsHTML() {
+function ModalSeatButtonsHTML(seatid) {
     let footerhtml = "";
 
     if (loggedIn) {
@@ -370,7 +407,7 @@ function ModalSeatButtonsHTML() {
         $("#pageModalFooter").html(footerhtml);
 
         $("#seatReserveBtn").on("click", function() {
-            SeatReserveButtonOnClick();
+            SeatReserveButtonOnClick(seatid);
         });
     }
 
@@ -398,11 +435,11 @@ function ModalLogIn() {
             "<input type='email' id='inputEmail' class='form-control' placeholder='E-mail adresse' required autofocus>" +
             "<label for='inputPassword' class='sr-only'>Adgangskode</label>" +
             "<input type='password' id='inputPassword' class='form-control' placeholder='Adgangskode' required>" +
-            "<div class='checkbox mb-3 text-center'>" +
-                "<label>" +
-                    "<input type='checkbox' value='remember-me'> Husk mig" +
-                "</label>" +
-            "</div>" +
+            //"<div class='checkbox mb-3 text-center'>" +
+            //    "<label>" +
+            //        "<input type='checkbox' value='remember-me'> Husk mig" +
+            //    "</label>" +
+            //"</div>" +
             "<button class='btn btn-lg btn-primary btn-block' type='submit'>Log Ind</button>" +
         "</form>" +
         "<button id='loginRegisterBtn' type='button' class='btn no-user-btn shadow-none d-block mx-auto mt-3'>" +
@@ -443,6 +480,15 @@ function ModalRegister() {
         RegisterReturnButtonOnClick();
     });
 }
+
+
+
+function BookSeat(seatid) {
+
+}
+
+
+
 
 
 function ActiveSeatImagePath(seat) {
