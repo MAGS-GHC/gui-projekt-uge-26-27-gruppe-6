@@ -1,5 +1,6 @@
 const seatrouter = require("express").Router();
 const seat = require("../models/seat");
+const {verifiedToken, verifyToken}=require("../validation")
 
 // Her kan man poste/oprette sæder med den her metode fra fx postman eller thunderclient.
 // det gør du ved at udfyld den her i body afdelingen i postman eller thunderclient
@@ -9,7 +10,7 @@ const seat = require("../models/seat");
 //  booked:     {type: Boolean},
 //  seatnumber: {type: Number}
 // eller har fundet en mode at oprette med loops fx.
-seatrouter.post("/", (req, res) => {
+seatrouter.post("/",(req, res) => {
   // data er den som man indtaster fra request.body
   data = req.body;
   seat.insertMany(data)

@@ -19,7 +19,9 @@ const seatRoutes = require("./routes/seat");
 const seatrowRoutes = require("./routes/seatrow");
 const sectionRoutes = require("./routes/section");
 const venueRoutes = require("./routes/venue");
+const authRoutes = require("./routes/auth");
 
+const { verifyToken } = require("./validation");
 // kommer "message: welcome to the jungle" når man kommer ind på api/welocme
 app.get("/api/welcome",(req, res) => {    
     res.status(200).send({message: "Welcome to the jungle"})
@@ -39,10 +41,12 @@ mongoose.connection.once("open",()=> console.log('Success'))
 // her får vi brugt al de data vi har i de andre filer og laver api endpoints
 // for at oprette flere, spørg kasper :D :D :D :D 
 app.use("/api/seats", seatRoutes);
-app.use("/api/seatrows", seatrowRoutes);
-app.use("/api/sections", sectionRoutes);
+app.use("/api/seatrows",seatrowRoutes);
+app.use("/api/sections",sectionRoutes);
 app.use("/api/venue", venueRoutes);
- 
+app.use("/api/user", authRoutes);
+
+
 // holder altid øje med serveren 
 app.listen(PORT, function() {
     console.log("server is running " + PORT)
